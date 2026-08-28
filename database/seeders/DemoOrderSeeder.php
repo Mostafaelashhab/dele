@@ -9,6 +9,7 @@ use App\Actions\Deliveries\RespondToAssignmentAction;
 use App\Actions\Orders\CreateOrderAction;
 use App\Domain\Dispatch\DispatchService;
 use App\Domain\Orders\OrderData;
+use App\Domain\Proof\DeliveryConfirmationCode;
 use App\Domain\Shared\ValueObjects\LocationSnapshot;
 use App\Domain\Shared\ValueObjects\Money;
 use App\Enums\DeliveryPriority;
@@ -176,8 +177,14 @@ class DemoOrderSeeder extends Seeder
 
         $delivery = $advance->arrivedAtDestination($delivery, $rider);
 
+        // A delivery cannot close without evidence, so the demo data goes
+        // through the same door a real rider does: the recipient reads their
+        // code out and the rider enters it. Seeding around that requirement
+        // would produce demo orders that could not have happened.
+        app(DeliveryConfirmationCode::class)->verify($delivery, $delivery->confirmation_code);
+
         $advance->delivered(
-            delivery: $delivery,
+            delivery: $delivery->fresh(),
             rider: $rider,
             receivedBy: $order->dropoffSnapshot()->contactName,
             codCollected: $order->payment_type->requiresCollection()

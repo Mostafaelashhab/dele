@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The deploy rehearsal.
+
+    The suite runs on SQLite by default because it is fast and needs no
+    service. But production is MySQL, and MySQL enforces things SQLite simply
+    does not: identifiers over 64 characters, stricter typing, real foreign
+    key behaviour. A migration that is fine on SQLite can fail on the first
+    deploy — which is exactly how a 67-character index name reached a live
+    database.
+
+    Run before every deploy:
+
+        mysql -u root -e "CREATE DATABASE IF NOT EXISTS banha_test_mysql \
+            CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        vendor/bin/phpunit -c phpunit-mysql.xml
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+    <testsuites>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_HOST" value="127.0.0.1"/>
+        <env name="DB_PORT" value="3306"/>
+        <env name="DB_DATABASE" value="banha_test_mysql"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value=""/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="CACHE_STORE" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="PLATFORM_TIMEZONE" value="Africa/Cairo"/>
+    </php>
+</phpunit>

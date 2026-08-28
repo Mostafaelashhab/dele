@@ -51,8 +51,12 @@ return new class extends Migration
 
             $table->foreign('business_id')->references('id')->on('businesses')->cascadeOnDelete();
             $table->foreign('delivery_company_id')->references('id')->on('delivery_companies')->cascadeOnDelete();
-            $table->unique(['business_id', 'delivery_company_id']);
-            $table->index(['business_id', 'preference']);
+            // Named explicitly: the generated name would be
+            // business_company_preferences_business_id_delivery_company_id_unique
+            // at 67 characters, and MySQL refuses identifiers over 64. SQLite
+            // has no such limit, which is why this only surfaced on deploy.
+            $table->unique(['business_id', 'delivery_company_id'], 'bcp_business_company_unique');
+            $table->index(['business_id', 'preference'], 'bcp_business_preference_index');
         });
     }
 
