@@ -36,6 +36,13 @@ class DeliveryIssueTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seedRoles();
+    }
+
     #[Test]
     public function a_recipient_can_report_a_problem_from_the_tracking_page(): void
     {
@@ -130,14 +137,21 @@ class DeliveryIssueTest extends TestCase
         $delivery = $this->delivery(DeliveryStatus::InTransit);
         $action = app(ReportDeliveryIssueAction::class);
 
+        $dispatcher = User::factory()->create();
+        $delivery->deliveryCompany->memberships()->create([
+            'user_id' => $dispatcher->id,
+            'role' => UserRole::CompanyOwner->value,
+            'is_active' => true,
+        ]);
+
         $first = $action->handle($delivery, DeliveryIssueCategory::Late);
         $second = $action->handle($delivery, DeliveryIssueCategory::Late);
 
         $this->assertSame($first->id, $second->id);
         $this->assertSame(1, DeliveryIssue::query()->count());
 
-        // And the company is not told twice about the same complaint.
-        Notification::assertSentTimes(DeliveryIssueReported::class, 0);
+        // And the dispatcher is not told twice about the same complaint.
+        Notification::assertSentToTimes($dispatcher, DeliveryIssueReported::class, 1);
     }
 
     #[Test]
