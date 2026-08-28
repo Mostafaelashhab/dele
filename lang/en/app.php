@@ -3,7 +3,7 @@
 return [
     'name' => 'Banha Delivery Network',
     'city' => 'Banha',
-    'tagline' => 'One system for all your deliveries',
+    'tagline' => 'Get anything delivered in Banha',
 
     'nav' => [
         'dashboard' => 'Dashboard',
@@ -115,6 +115,19 @@ return [
         'group_contact' => 'Contact details',
         'group_credentials' => 'Sign-in details',
         'back_to_choice' => 'Back to account type',
+        'register_individual' => 'Register to send',
+        'register_rider' => 'Register as an independent rider',
+        'rider_pending_flash' => 'Your account is created. The platform will review your details, then orders start reaching you.',
+        'rider_pending_title' => 'Your account is under review',
+        'rider_pending_body' => 'We are checking your ID and photo. Until that is done no orders will reach you — you would be collecting a stranger’s parcel, and we have to know who you are first.',
+        'group_identity' => 'Proof of identity',
+        'id_card_front' => 'ID card — front',
+        'id_card_back' => 'ID card — back',
+        'face_photo' => 'A clear photo of you',
+        'identity_hint' => 'Your ID is stored where it has no public address — nobody can reach it but the platform reviewer. Only your photo is ever shown to a customer at the door.',
+        'vehicle' => 'What you deliver on',
+        'vehicle_identifier' => 'Plate or bike number',
+        'vehicle_identifier_hint' => 'Optional, but it reassures a customer.',
         'register_company' => 'Register your delivery company',
         'company_name' => 'Delivery company name',
         'fleet_size' => 'How many riders you run',

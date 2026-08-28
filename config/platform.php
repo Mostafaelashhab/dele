@@ -202,6 +202,10 @@ return [
         // this edge before uploading, which is the difference between a
         // one-second upload and a stalled one.
         'proof_max_edge' => (int) env('MEDIA_PROOF_MAX_EDGE', 1400),
+
+        // Identity documents live here and are never given a URL. The
+        // ordinary media disk is public by design; an ID card must not be.
+        'private_disk' => env('MEDIA_PRIVATE_DISK', 'local'),
         'logo_max_edge' => (int) env('MEDIA_LOGO_MAX_EDGE', 512),
     ],
 

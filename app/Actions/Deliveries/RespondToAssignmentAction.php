@@ -104,14 +104,15 @@ class RespondToAssignmentAction
 
         $assignment->loadMissing(['delivery', 'rider']);
 
+        // A decline is not an assignment. Recording it as one told the
+        // customer a rider had been assigned at the moment one refused.
         $this->transitioner->recordEvent(
             $assignment->delivery,
             $assignment->delivery->status,
             $assignment->delivery->status,
-            OrderEventType::RiderAssigned,
+            OrderEventType::RiderDeclined,
             $expired ? Actor::system('assignment_expiry') : Actor::rider($assignment->rider),
             [
-                'outcome' => 'rejected',
                 'rider_id' => $assignment->rider_id,
                 'reason' => $reason,
                 'expired' => $expired,

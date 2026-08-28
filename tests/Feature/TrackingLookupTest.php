@@ -155,10 +155,53 @@ class TrackingLookupTest extends TestCase
     }
 
     #[Test]
-    public function both_fields_are_required(): void
+    public function the_phone_is_required_but_the_order_number_is_not(): void
     {
+        // The number is optional by design: this network sends no SMS, so a
+        // recipient may never have been told one.
         $this->post(route('tracking.lookup'), [])
-            ->assertSessionHasErrors(['number', 'phone']);
+            ->assertSessionHasErrors('phone')
+            ->assertSessionDoesntHaveErrors('number');
+    }
+
+    /**
+     * Somebody who was never sent a link still has to be able to find their
+     * own parcel.
+     */
+    #[Test]
+    public function a_phone_alone_lists_that_person_parcels(): void
+    {
+        $response = $this->post(route('tracking.lookup'), [
+            'phone' => $this->order->dropoffSnapshot()->contactPhone,
+        ]);
+
+        $response->assertOk()
+            ->assertSee(__('tracking.lookup.results_title'))
+            ->assertSee($this->order->number);
+    }
+
+    /**
+     * The restraint that makes a phone-only search acceptable: a phone number
+     * is not a password, so the list must not reveal anything a stranger who
+     * happened to know it should not see.
+     */
+    #[Test]
+    public function the_listing_reveals_no_address_or_recipient(): void
+    {
+        $snapshot = $this->order->dropoffSnapshot();
+
+        $this->post(route('tracking.lookup'), ['phone' => $snapshot->contactPhone])
+            ->assertOk()
+            ->assertDontSee($snapshot->addressLine)
+            ->assertDontSee($snapshot->contactName);
+    }
+
+    #[Test]
+    public function a_phone_with_no_parcels_is_told_so_plainly(): void
+    {
+        $this->post(route('tracking.lookup'), ['phone' => '01099999999'])
+            ->assertOk()
+            ->assertSee(__('tracking.lookup.results_empty'));
     }
 
     #[Test]

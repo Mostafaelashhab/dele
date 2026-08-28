@@ -7,10 +7,10 @@
                 @foreach ($weights as $key => $value)
                     <div>
                         <div class="mb-1.5 flex items-center justify-between">
-                            <label class="min-w-0 pe-2 text-xs font-semibold text-ink-700" for="w-{{ $key }}">
+                            <label class="min-w-0 pe-2 text-xs font-semibold text-ink-200" for="w-{{ $key }}">
                                 {{ __('offer.factor.'.$key) }}
                             </label>
-                            <span class="tnum text-xs text-ink-500">
+                            <span class="tnum text-xs text-ink-400">
                                 {{ number_format((float) $value, 2) }}
                             </span>
                         </div>
@@ -20,9 +20,9 @@
                     </div>
                 @endforeach
 
-                <p class="rounded-md bg-ink-50 px-3 py-2 text-2xs text-ink-500">
+                <p class="rounded-md bg-white/[0.03] px-3 py-2 text-2xs text-ink-400">
                     {{ __('form.weights_total') }}:
-                    <span class="tnum font-semibold text-ink-800">
+                    <span class="tnum font-semibold text-ink-100">
                         {{ number_format(array_sum(array_map('floatval', $weights)), 2) }}
                     </span>
                 </p>

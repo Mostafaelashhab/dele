@@ -12,31 +12,31 @@
     <div class="grid gap-5 xl:grid-cols-3">
         <div class="space-y-5">
             <x-ui.card :title="__('app.common.total')">
-                <p class="tnum text-3xl font-bold text-ink-900">{{ $settlement->netPayable()->format() }}</p>
-                <dl class="mt-4 space-y-2 border-t border-ink-100 pt-3 text-sm">
+                <p class="tnum text-3xl font-bold text-white">{{ $settlement->netPayable()->format() }}</p>
+                <dl class="mt-4 space-y-2 border-t border-white/5 pt-3 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('app.dashboard.revenue') }}</dt>
-                        <dd class="tnum text-ink-800">{{ $settlement->gross()->format(false) }}</dd>
+                        <dt class="text-ink-400">{{ __('app.dashboard.revenue') }}</dt>
+                        <dd class="tnum text-ink-100">{{ $settlement->gross()->format(false) }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('finance.category.adjustment') }}</dt>
-                        <dd class="tnum text-ink-800">
+                        <dt class="text-ink-400">{{ __('finance.category.adjustment') }}</dt>
+                        <dd class="tnum text-ink-100">
                             {{ $settlement->adjustments_minor?->format(false) ?? '0.00' }}
                         </dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('finance.category.cod_collected') }}</dt>
-                        <dd class="tnum text-ink-800">
+                        <dt class="text-ink-400">{{ __('finance.category.cod_collected') }}</dt>
+                        <dd class="tnum text-ink-100">
                             {{ $settlement->cod_collected_minor?->format(false) ?? '0.00' }}
                         </dd>
                     </div>
-                    <div class="flex justify-between border-t border-ink-100 pt-2">
-                        <dt class="text-ink-500">{{ __('app.nav.deliveries') }}</dt>
-                        <dd class="tnum text-ink-800">{{ $settlement->deliveries_count }}</dd>
+                    <div class="flex justify-between border-t border-white/5 pt-2">
+                        <dt class="text-ink-400">{{ __('app.nav.deliveries') }}</dt>
+                        <dd class="tnum text-ink-100">{{ $settlement->deliveries_count }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('app.common.date') }}</dt>
-                        <dd class="tnum text-ink-800">
+                        <dt class="text-ink-400">{{ __('app.common.date') }}</dt>
+                        <dd class="tnum text-ink-100">
                             {{ $settlement->period_start->translatedFormat('d M') }}
                             – {{ $settlement->period_end->translatedFormat('d M Y') }}
                         </dd>
@@ -44,7 +44,7 @@
                 </dl>
 
                 @if ($settlement->status->value !== 'paid')
-                    <div class="mt-4 space-y-2 border-t border-ink-100 pt-4">
+                    <div class="mt-4 space-y-2 border-t border-white/5 pt-4">
                         <x-ui.field :label="__('form.payment_reference')" name="paymentReference"
                                     :hint="__('form.payment_reference_hint')">
                             <input type="text" wire:model="paymentReference" class="field-input">
@@ -55,9 +55,9 @@
                         </x-ui.button>
                     </div>
                 @else
-                    <p class="mt-4 border-t border-ink-100 pt-3 text-xs text-ink-500">
+                    <p class="mt-4 border-t border-white/5 pt-3 text-xs text-ink-400">
                         {{ __('finance.settlement.paid') }} —
-                        {{ $settlement->paid_at?->translatedFormat('d M Y H:i') }}
+                        {{ $settlement->paid_at?->translatedFormat('d M Y g:i A') }}
                         @if ($settlement->payment_reference)
                             · {{ $settlement->payment_reference }}
                         @endif
@@ -80,11 +80,11 @@
                     <tbody>
                         @foreach ($this->entries as $entry)
                             <tr wire:key="{{ $entry->id }}">
-                                <td class="tnum text-ink-500">
-                                    {{ $entry->occurred_at->translatedFormat('d M H:i') }}
+                                <td class="tnum text-ink-400">
+                                    {{ $entry->occurred_at->translatedFormat('d M g:i A') }}
                                 </td>
-                                <td class="text-ink-700">{{ $entry->delivery?->order?->number ?? '—' }}</td>
-                                <td class="text-ink-600">{{ $entry->category->label() }}</td>
+                                <td class="text-ink-200">{{ $entry->delivery?->order?->number ?? '—' }}</td>
+                                <td class="text-ink-300">{{ $entry->category->label() }}</td>
                                 <td @class([
                                     'tnum text-end font-medium',
                                     'text-emerald-700' => $entry->entry_type->value === 'credit',

@@ -43,11 +43,11 @@
                                                class="font-medium text-signal-700 hover:underline">
                                                 {{ $company->displayName() }}
                                             </a>
-                                            <p class="text-2xs text-ink-500">{{ $company->contact_person }}</p>
+                                            <p class="text-2xs text-ink-400">{{ $company->contact_person }}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="tnum text-ink-600" dir="ltr">{{ $company->phone }}</td>
+                                <td class="tnum text-ink-300" dir="ltr">{{ $company->phone }}</td>
                                 <td class="tnum text-end">
                                     <span class="font-medium text-emerald-700">{{ $company->online_riders_count }}</span>
                                     <span class="text-ink-400">/{{ $company->riders_count }}</span>

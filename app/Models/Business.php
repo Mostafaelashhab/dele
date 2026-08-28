@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'phone', 'email', 'status', 'default_zone_id', 'address_line', 'latitude',
     'longitude', 'platform_fee_bps', 'default_priority', 'matching_strategy',
     'credit_limit_minor', 'api_enabled', 'settings',
-])]
+    'is_individual', ])]
 class Business extends Model
 {
     /** @use HasFactory<BusinessFactory> */
@@ -37,6 +37,7 @@ class Business extends Model
     protected function casts(): array
     {
         return [
+            'is_individual' => 'boolean',
             'status' => AccountStatus::class,
             'default_priority' => DeliveryPriority::class,
             'latitude' => 'float',

@@ -30,23 +30,59 @@ const TILE_ATTRIBUTION =
     '<a href="https://www.openstreetmap.org/copyright" rel="noreferrer" target="_blank">&copy; OSM</a>';
 
 /**
+ * The glyph inside a marker, by what the marker is.
+ *
+ * A letter or a bare colour tells you something is there; a symbol tells you
+ * what. These are the same shapes the interface uses elsewhere, so a pin on a
+ * map and a row in a list read as the same thing.
+ */
+const MARKER_GLYPHS = {
+    pickup: '<path d="m2 7 1.5-3.5A2 2 0 0 1 5.3 2.5h13.4a2 2 0 0 1 1.8 1L22 7"/><path d="M2 7h20v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0Z"/><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/>',
+    dropoff: '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+    late: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    rider: '<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+};
+
+function glyphSvg(variant, size) {
+    const paths = MARKER_GLYPHS[variant];
+
+    if (!paths) {
+        return '';
+    }
+
+    const box = Math.round(size * 0.5);
+
+    return `<svg viewBox="0 0 24 24" width="${box}" height="${box}" fill="none"
+                 stroke="currentColor" stroke-width="2.25"
+                 stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+
+/**
  * Builds a marker whose look comes from CSS classes rather than an image.
+ *
+ * A fixed place gets a pin anchored at its point; a rider gets a dot anchored
+ * at its centre, because a person is not standing on one spot.
  */
 function divMarker({ variant, label, size = 30, pulse = false }) {
-    const classes = ['map-marker', `map-marker-${variant}`];
+    const isPlace = variant !== 'rider';
+    const shape = isPlace ? 'map-marker-pin' : 'map-marker-dot';
+    const classes = ['map-marker', shape, `map-marker-${variant}`];
 
     if (pulse) {
         classes.push('map-marker-pulse');
     }
 
+    // A label only appears when there is no symbol for the thing.
+    const inner = glyphSvg(variant, size)
+        || `<span style="font-size:${Math.round(size * 0.42)}px;font-weight:700;line-height:1">${label ?? ''}</span>`;
+
     return L.divIcon({
         className: '',
-        html: `<div class="${classes.join(' ')}" style="width:${size}px;height:${size}px;position:relative">
-                 <span style="font-size:${Math.round(size * 0.42)}px;font-weight:700;line-height:1">${label ?? ''}</span>
-               </div>`,
+        html: `<div class="${classes.join(' ')}" style="width:${size}px;height:${size}px;position:relative">${inner}</div>`,
         iconSize: [size, size],
-        iconAnchor: [size / 2, size / 2],
-        popupAnchor: [0, -(size / 2)],
+        // The pin's tip is the coordinate; a dot's centre is.
+        iconAnchor: isPlace ? [size / 2, size] : [size / 2, size / 2],
+        popupAnchor: [0, isPlace ? -size : -(size / 2)],
     });
 }
 

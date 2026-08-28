@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
     'address_line', 'latitude', 'longitude', 'provider', 'provider_config',
     'auto_accept_offers', 'max_concurrent_deliveries', 'offer_timeout_seconds',
     'commission_bps', 'settlement_period', 'settlement_account', 'working_hours',
+    'is_solo',
 ])]
 class DeliveryCompany extends Model
 {
@@ -44,6 +45,7 @@ class DeliveryCompany extends Model
             'longitude' => 'float',
             'provider_config' => 'array',
             'working_hours' => 'array',
+            'is_solo' => 'boolean',
             'auto_accept_offers' => 'boolean',
             'max_concurrent_deliveries' => 'integer',
             'offer_timeout_seconds' => 'integer',
@@ -247,6 +249,17 @@ class DeliveryCompany extends Model
         return $closes >= $opens
             ? $time >= $opens && $time <= $closes
             : $time >= $opens || $time <= $closes;
+    }
+
+    /**
+     * The one rider a solo account is built around.
+     *
+     * A solo company is a rider working alone, so "the company" and "the
+     * rider" are the same person and the interface should say so.
+     */
+    public function soloRider(): ?Rider
+    {
+        return $this->is_solo ? $this->riders()->first() : null;
     }
 
     public function displayName(): string

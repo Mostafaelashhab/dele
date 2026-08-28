@@ -4,7 +4,7 @@
     <form wire:submit="save" class="grid gap-5 xl:grid-cols-2">
         <x-ui.card :title="__('app.nav.settings')">
             <x-ui.image-upload
-                class="mb-5 border-b border-ink-100 pb-5"
+                class="mb-5 border-b border-white/5 pb-5"
                 property="logo"
                 :label="__('business.media.company_logo')"
                 :hint="__('business.media.logo_hint')"
@@ -31,12 +31,12 @@
             <div class="space-y-4">
                 <label class="flex items-start gap-3">
                     <input type="checkbox" wire:model="autoAccept"
-                           class="mt-0.5 size-4 rounded border-ink-300 text-signal-600">
+                           class="mt-0.5 size-4 rounded border-white/15 text-signal-600">
                     <span>
-                        <span class="block text-sm font-medium text-ink-900">
+                        <span class="block text-sm font-medium text-white">
                             {{ __('form.auto_assign') }}
                         </span>
-                        <span class="block text-xs text-ink-500">
+                        <span class="block text-xs text-ink-400">
                             {{ __('form.auto_assign_hint') }}
                         </span>
                     </span>
@@ -68,12 +68,12 @@
                 <tbody>
                     @foreach ($days as $day)
                         <tr wire:key="{{ $day }}">
-                            <td class="font-medium capitalize text-ink-900">
+                            <td class="font-medium capitalize text-white">
                                 {{ \Illuminate\Support\Carbon::parse('next '.$day)->translatedFormat('l') }}
                             </td>
                             <td class="text-center">
                                 <input type="checkbox" wire:model="hours.{{ $day }}.closed"
-                                       class="size-4 rounded border-ink-300 text-red-600"
+                                       class="size-4 rounded border-white/15 text-red-600"
                                        title="{{ __('app.common.inactive') }}">
                             </td>
                             <td>

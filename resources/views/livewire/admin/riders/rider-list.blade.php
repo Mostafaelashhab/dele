@@ -47,11 +47,11 @@
                         @foreach ($riders as $rider)
                             <tr wire:key="{{ $rider->id }}">
                                 <td>
-                                    <p class="font-medium text-ink-900">{{ $rider->name }}</p>
-                                    <p class="tnum text-2xs text-ink-500" dir="ltr">{{ $rider->phone }}</p>
+                                    <p class="font-medium text-white">{{ $rider->name }}</p>
+                                    <p class="tnum text-2xs text-ink-400" dir="ltr">{{ $rider->phone }}</p>
                                 </td>
-                                <td class="text-ink-700">{{ $rider->deliveryCompany->displayName() }}</td>
-                                <td class="text-ink-600">{{ $rider->vehicle_type->label() }}</td>
+                                <td class="text-ink-200">{{ $rider->deliveryCompany->displayName() }}</td>
+                                <td class="text-ink-300">{{ $rider->vehicle_type->label() }}</td>
                                 <td>
                                     <x-ui.badge :tone="$rider->status->tone()" dot>
                                         {{ $rider->status->label() }}
@@ -61,7 +61,7 @@
                                     {{ $rider->active_deliveries_count }}/{{ $rider->max_concurrent_deliveries }}
                                 </td>
                                 <td class="tnum text-end">{{ $rider->completed_deliveries_count }}</td>
-                                <td class="tnum text-end text-ink-500">
+                                <td class="tnum text-end text-ink-400">
                                     {{ $rider->last_seen_at?->diffForHumans(short: true) ?? __('app.common.never') }}
                                 </td>
                             </tr>
@@ -70,7 +70,7 @@
                 </table>
             </div>
             @if ($riders->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $riders->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $riders->links() }}</div>
             @endif
         @endif
     </x-ui.card>

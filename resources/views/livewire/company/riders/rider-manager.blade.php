@@ -34,12 +34,12 @@
                                             size="sm"
                                             :tone="$rider->status->value === 'online' ? 'green' : 'neutral'" />
                                         <div class="min-w-0">
-                                            <p class="font-medium text-ink-900">{{ $rider->name }}</p>
-                                            <p class="tnum text-2xs text-ink-500" dir="ltr">{{ $rider->phone }}</p>
+                                            <p class="font-medium text-white">{{ $rider->name }}</p>
+                                            <p class="tnum text-2xs text-ink-400" dir="ltr">{{ $rider->phone }}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-ink-700">
+                                <td class="text-ink-200">
                                     <x-ui.icon :name="match ($rider->vehicle_type->value) {
                                         'car' => 'car', 'van' => 'van',
                                         'bicycle' => 'bicycle', 'on_foot' => 'walk',
@@ -84,7 +84,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/50 p-4"
              wire:click.self="$set('creating', false)">
             <div class="w-full max-w-lg rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.nav.riders') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.nav.riders') }}</h2>
 
                 <form wire:submit="save" class="mt-4 grid gap-4 sm:grid-cols-2">
                     <x-ui.image-upload
@@ -117,9 +117,9 @@
                         <input type="number" min="1" max="10" wire:model="maxConcurrent" class="field-input tnum">
                     </x-ui.field>
 
-                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-700">
+                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-200">
                         <input type="checkbox" wire:model.live="createLogin"
-                               class="size-4 rounded border-ink-300 text-signal-600">
+                               class="size-4 rounded border-white/15 text-signal-600">
                         {{ __('form.create_login') }}
                     </label>
 

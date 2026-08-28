@@ -29,9 +29,9 @@
                     <tbody>
                         @foreach ($this->rules as $rule)
                             <tr wire:key="{{ $rule->id }}">
-                                <td class="font-medium text-ink-900">{{ $rule->name }}</td>
-                                <td class="text-ink-700">{{ $rule->type->label() }}</td>
-                                <td class="text-ink-600">
+                                <td class="font-medium text-white">{{ $rule->name }}</td>
+                                <td class="text-ink-200">{{ $rule->type->label() }}</td>
+                                <td class="text-ink-300">
                                     @if ($rule->pickupZone || $rule->dropoffZone)
                                         {{ $rule->pickupZone?->displayName() ?? '*' }}
                                         <span class="text-ink-300">→</span>
@@ -81,7 +81,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/50 p-4"
              wire:click.self="$set('editing', false)">
             <div class="w-full max-w-2xl rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">
+                <h2 class="text-sm font-semibold text-white">
                     {{ $ruleId ? __('app.common.edit') : __('app.common.create') }} — {{ __('app.nav.pricing') }}
                 </h2>
 
@@ -153,9 +153,9 @@
                         <input type="number" min="0" step="100" wire:model="freeUnits" class="field-input tnum">
                     </x-ui.field>
 
-                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-700 sm:col-span-2">
+                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-200 sm:col-span-2">
                         <input type="checkbox" wire:model="ruleActive"
-                               class="size-4 rounded border-ink-300 text-signal-600">
+                               class="size-4 rounded border-white/15 text-signal-600">
                         {{ __('form.rule_active') }}
                     </label>
 

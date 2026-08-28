@@ -4,7 +4,7 @@
     <form wire:submit="save" class="grid gap-5 xl:grid-cols-2">
         <x-ui.card :title="__('app.auth.business_name')">
             <x-ui.image-upload
-                class="mb-5 border-b border-ink-100 pb-5"
+                class="mb-5 border-b border-white/5 pb-5"
                 property="logo"
                 :label="__('business.media.logo')"
                 :hint="__('business.media.logo_hint')"
@@ -73,7 +73,7 @@
                 <tbody>
                     @foreach ($this->companies as $company)
                         <tr wire:key="{{ $company->id }}">
-                            <td class="font-medium text-ink-900">{{ $company->displayName() }}</td>
+                            <td class="font-medium text-white">{{ $company->displayName() }}</td>
                             <td class="tnum text-end">
                                 {{ number_format($company->acceptanceRate() * 100, 0) }}%
                             </td>

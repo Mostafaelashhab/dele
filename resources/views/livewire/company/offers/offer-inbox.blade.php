@@ -39,8 +39,8 @@
                     <div class="flex-1 p-4">
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
-                                <p class="truncate text-sm font-bold text-ink-900">{{ $order->number }}</p>
-                                <p class="mt-0.5 text-xs text-ink-500">
+                                <p class="truncate text-sm font-bold text-white">{{ $order->number }}</p>
+                                <p class="mt-0.5 text-xs text-ink-400">
                                     {{ $order->priority->label() }} · {{ $order->package_size->label() }}
                                 </p>
                             </div>
@@ -48,30 +48,30 @@
                                 <p class="tnum text-xl font-bold text-emerald-700">
                                     {{ $offer->payout()->format(false) }}
                                 </p>
-                                <p class="text-2xs text-ink-500">{{ __('delivery.labels.payout') }}</p>
+                                <p class="text-2xs text-ink-400">{{ __('delivery.labels.payout') }}</p>
                             </div>
                         </div>
 
-                        <dl class="mt-4 space-y-2.5 border-t border-ink-100 pt-3 text-xs">
+                        <dl class="mt-4 space-y-2.5 border-t border-white/5 pt-3 text-xs">
                             <div class="flex gap-2">
-                                <dt class="w-16 shrink-0 font-semibold text-ink-500">
+                                <dt class="w-16 shrink-0 font-semibold text-ink-400">
                                     {{ __('delivery.labels.pickup') }}
                                 </dt>
-                                <dd class="min-w-0 flex-1 text-ink-800">
+                                <dd class="min-w-0 flex-1 text-ink-100">
                                     {{ $order->pickupSnapshot()->area ?? $order->pickupSnapshot()->addressLine }}
                                 </dd>
                             </div>
                             <div class="flex gap-2">
-                                <dt class="w-16 shrink-0 font-semibold text-ink-500">
+                                <dt class="w-16 shrink-0 font-semibold text-ink-400">
                                     {{ __('delivery.labels.dropoff') }}
                                 </dt>
-                                <dd class="min-w-0 flex-1 text-ink-800">
+                                <dd class="min-w-0 flex-1 text-ink-100">
                                     {{ $order->dropoffSnapshot()->area ?? $order->dropoffSnapshot()->addressLine }}
                                 </dd>
                             </div>
                         </dl>
 
-                        <div class="mt-3 flex items-center gap-4 border-t border-ink-100 pt-3 text-xs text-ink-600">
+                        <div class="mt-3 flex items-center gap-4 border-t border-white/5 pt-3 text-xs text-ink-300">
                             <span class="tnum inline-flex items-center gap-1">
                                 <x-ui.icon name="navigation" class="size-3.5 text-ink-400" />
                                 {{ number_format($delivery->distance_meters / 1000, 1) }} {{ __('app.common.km') }}
@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 border-t border-ink-200 p-3">
+                    <div class="grid grid-cols-3 gap-2 border-t border-white/10 p-3">
                         <x-ui.button variant="success" class="col-span-2"
                                      wire:click="accept('{{ $offer->id }}')"
                                      wire:loading.attr="disabled"
@@ -117,14 +117,14 @@
                     <tbody>
                         @foreach ($this->recentlyClosed as $offer)
                             <tr>
-                                <td class="font-medium text-ink-900">{{ $offer->delivery->order->number }}</td>
+                                <td class="font-medium text-white">{{ $offer->delivery->order->number }}</td>
                                 <td>
                                     <x-ui.badge :tone="$offer->status->value === 'accepted' ? 'green' : 'slate'">
                                         {{ $offer->status->label() }}
                                     </x-ui.badge>
                                 </td>
                                 <td class="tnum">{{ $offer->payout()->format(false) }}</td>
-                                <td class="tnum text-ink-500">{{ $offer->responded_at?->diffForHumans() }}</td>
+                                <td class="tnum text-ink-400">{{ $offer->responded_at?->diffForHumans() }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -139,7 +139,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4"
              wire:click.self="$set('rejecting', null)">
             <div class="w-full max-w-sm rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('rider.app.confirm_reject') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('rider.app.confirm_reject') }}</h2>
                 <form wire:submit="reject" class="mt-4 space-y-3">
                     <x-ui.field :label="__('app.common.reason')" name="rejectionReason">
                         <input type="text" wire:model="rejectionReason" class="field-input" autofocus>

@@ -49,7 +49,7 @@
             <div>
                 <dt class="text-2xs text-ink-400">{{ __('rider.app.your_rating') }}</dt>
                 <dd class="tnum mt-0.5 flex items-center gap-1 text-sm font-bold">
-                    <x-ui.icon name="star" class="size-3.5 text-amber-400" />
+                    <x-ui.icon name="star" class="size-3.5 text-warn-400" />
                     {{ $rider->rating_bps > 0 ? number_format($rider->rating(), 1) : '—' }}
                 </dd>
             </div>
@@ -118,7 +118,7 @@
                                     {{ __('app.common.km') }}
                                 </span>
                                 @if ($assignment->expires_at)
-                                    <span class="tnum inline-flex items-center gap-1 text-xs font-semibold text-amber-700">
+                                    <span class="tnum inline-flex items-center gap-1 text-xs font-semibold text-warn-700">
                                         <x-ui.icon name="clock" class="size-3.5" />
                                         {{ $assignment->secondsRemaining() }}s
                                     </span>

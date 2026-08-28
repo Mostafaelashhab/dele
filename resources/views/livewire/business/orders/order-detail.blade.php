@@ -27,19 +27,20 @@
         <div class="space-y-5 xl:col-span-2">
             <div class="grid gap-4 sm:grid-cols-2">
                 <x-ui.card :title="__('delivery.labels.pickup')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $pickup->contactName }}</p>
-                    <p class="mt-1 text-sm leading-relaxed text-ink-600">{{ $pickup->fullAddress() }}</p>
-                    <p class="tnum mt-1 text-sm text-ink-500" dir="ltr">{{ $pickup->contactPhone }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $pickup->contactName }}</p>
+                    <p class="mt-1 text-sm leading-relaxed text-ink-300">{{ $pickup->fullAddress() }}</p>
+                    <p class="tnum mt-1 text-sm text-ink-400" dir="ltr">{{ $pickup->contactPhone }}</p>
                 </x-ui.card>
                 <x-ui.card :title="__('delivery.labels.customer')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $dropoff->contactName }}</p>
-                    <p class="mt-1 text-sm leading-relaxed text-ink-600">{{ $dropoff->fullAddress() }}</p>
-                    <p class="tnum mt-1 text-sm text-ink-500" dir="ltr">{{ $dropoff->contactPhone }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $dropoff->contactName }}</p>
+                    <p class="mt-1 text-sm leading-relaxed text-ink-300">{{ $dropoff->fullAddress() }}</p>
+                    <p class="tnum mt-1 text-sm text-ink-400" dir="ltr">{{ $dropoff->contactPhone }}</p>
                 </x-ui.card>
             </div>
 
             @if ($this->hasMap())
                 <x-ui.map
+                style="dark"
                     :id="\App\Livewire\Business\Orders\OrderDetail::MAP_ID"
                     :markers="$this->mapConfig['markers']"
                     :route="$this->mapConfig['route']"
@@ -47,20 +48,20 @@
             @endif
 
             <x-ui.card :title="__('delivery.labels.timeline')" flush>
-                <ol class="divide-y divide-ink-100">
+                <ol class="divide-y divide-white/5">
                     @foreach ($this->timeline as $event)
                         <li class="flex items-start gap-3 px-4 py-3">
                             <span class="mt-1.5 size-2 shrink-0 rounded-full bg-signal-500"></span>
                             <div class="min-w-0 flex-1">
-                                <p class="text-sm text-ink-800">{{ $event->type->label() }}</p>
+                                <p class="text-sm text-ink-100">{{ $event->type->label() }}</p>
                                 @if ($company = data_get($event->payload, 'delivery_company_name'))
-                                    <p class="text-2xs text-ink-500">{{ $company }}</p>
+                                    <p class="text-2xs text-ink-400">{{ $company }}</p>
                                 @elseif ($rider = data_get($event->payload, 'rider_name'))
-                                    <p class="text-2xs text-ink-500">{{ $rider }}</p>
+                                    <p class="text-2xs text-ink-400">{{ $rider }}</p>
                                 @endif
                             </div>
                             <span class="tnum shrink-0 text-2xs text-ink-400">
-                                {{ $event->occurred_at->translatedFormat('d M H:i') }}
+                                {{ $event->occurred_at->translatedFormat('d M g:i A') }}
                             </span>
                         </li>
                     @endforeach
@@ -92,14 +93,14 @@
         <div class="space-y-5">
             @if ($delivery)
                 <x-ui.card :title="__('delivery.labels.price')">
-                    <p class="tnum text-2xl font-bold text-ink-900">{{ $delivery->price()->format() }}</p>
+                    <p class="tnum text-2xl font-bold text-white">{{ $delivery->price()->format() }}</p>
 
-                    <dl class="mt-3 space-y-1.5 border-t border-ink-100 pt-3 text-xs">
+                    <dl class="mt-3 space-y-1.5 border-t border-white/5 pt-3 text-xs">
                         @foreach (($delivery->price_breakdown['lines'] ?? []) as $line)
                             @continue(($line['amount_minor'] ?? 0) === 0)
                             <div class="flex justify-between gap-3">
-                                <dt class="text-ink-500">{{ $line['label'] }}</dt>
-                                <dd class="tnum shrink-0 text-ink-800">
+                                <dt class="text-ink-400">{{ $line['label'] }}</dt>
+                                <dd class="tnum shrink-0 text-ink-100">
                                     {{ number_format($line['amount_minor'] / 100, 2) }}
                                 </dd>
                             </div>
@@ -107,9 +108,9 @@
                     </dl>
 
                     @if ($order->payment_type->requiresCollection())
-                        <div class="mt-3 flex justify-between rounded-md bg-amber-50 px-2 py-1.5 text-xs">
-                            <span class="font-medium text-amber-900">{{ __('order.payment.cod') }}</span>
-                            <span class="tnum font-semibold text-amber-900">
+                        <div class="mt-3 flex justify-between rounded-md bg-warn-500/10 px-2 py-1.5 text-xs">
+                            <span class="font-medium text-warn-200">{{ __('order.payment.cod') }}</span>
+                            <span class="tnum font-semibold text-warn-200">
                                 {{ $order->cod_amount_minor->format(false) }}
                             </span>
                         </div>
@@ -118,21 +119,21 @@
 
                 <x-ui.card :title="__('delivery.labels.company')">
                     @if ($delivery->deliveryCompany)
-                        <p class="text-sm font-semibold text-ink-900">
+                        <p class="text-sm font-semibold text-white">
                             {{ $delivery->deliveryCompany->displayName() }}
                         </p>
-                        <p class="tnum mt-1 text-sm text-ink-500" dir="ltr">
+                        <p class="tnum mt-1 text-sm text-ink-400" dir="ltr">
                             {{ $delivery->deliveryCompany->phone }}
                         </p>
                         @if ($delivery->rider)
-                            <div class="mt-3 border-t border-ink-100 pt-3">
-                                <p class="text-xs text-ink-500">{{ __('delivery.labels.rider') }}</p>
-                                <p class="text-sm font-medium text-ink-900">{{ $delivery->rider->name }}</p>
-                                <p class="tnum text-sm text-ink-500" dir="ltr">{{ $delivery->rider->phone }}</p>
+                            <div class="mt-3 border-t border-white/5 pt-3">
+                                <p class="text-xs text-ink-400">{{ __('delivery.labels.rider') }}</p>
+                                <p class="text-sm font-medium text-white">{{ $delivery->rider->name }}</p>
+                                <p class="tnum text-sm text-ink-400" dir="ltr">{{ $delivery->rider->phone }}</p>
                             </div>
                         @endif
                     @else
-                        <p class="py-2 text-sm text-ink-500">{{ __('delivery.status.searching') }}</p>
+                        <p class="py-2 text-sm text-ink-400">{{ __('delivery.status.searching') }}</p>
                     @endif
                 </x-ui.card>
 
@@ -162,7 +163,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4"
              wire:click.self="$set('cancelling', false)">
             <div class="w-full max-w-sm rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.common.cancel') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.common.cancel') }}</h2>
                 <form wire:submit="cancel" class="mt-4 space-y-3">
                     <x-ui.field :label="__('app.common.reason')" name="cancellationReason" required>
                         <input type="text" wire:model="cancellationReason" class="field-input" autofocus>

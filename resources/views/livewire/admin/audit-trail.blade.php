@@ -40,46 +40,46 @@
                         @foreach ($entries as $entry)
                             <tr wire:key="{{ $entry->id }}" class="cursor-pointer"
                                 wire:click="toggle('{{ $entry->id }}')">
-                                <td class="tnum whitespace-nowrap text-ink-500">
-                                    {{ $entry->created_at->translatedFormat('d M H:i:s') }}
+                                <td class="tnum whitespace-nowrap text-ink-400">
+                                    {{ $entry->created_at->translatedFormat('d M g:i:s A') }}
                                 </td>
                                 <td><x-ui.badge>{{ $entry->action->label() }}</x-ui.badge></td>
-                                <td class="text-ink-800">
+                                <td class="text-ink-100">
                                     {{ $entry->actor_label ?? $entry->actor_type }}
                                     <p class="text-2xs text-ink-400">{{ $entry->actor_type }}</p>
                                 </td>
-                                <td class="max-w-md truncate text-ink-600">
+                                <td class="max-w-md truncate text-ink-300">
                                     {{ $entry->description ?? class_basename($entry->entity_type ?? '') }}
                                 </td>
                                 <td class="tnum text-2xs text-ink-400" dir="ltr">{{ $entry->ip_address }}</td>
                             </tr>
 
                             @if ($expanded === $entry->id)
-                                <tr class="bg-ink-50">
+                                <tr class="bg-white/[0.03]">
                                     <td colspan="5" class="px-4 py-3">
                                         <div class="grid gap-4 sm:grid-cols-2">
                                             @if ($entry->old_values)
                                                 <div>
-                                                    <p class="mb-1 text-2xs font-semibold uppercase text-ink-500">
+                                                    <p class="mb-1 text-2xs font-semibold uppercase text-ink-400">
                                                         {{ __('app.common.updated') }} —
                                                     </p>
                                                     <pre class="overflow-x-auto rounded bg-white p-2 font-mono text-2xs
-                                                                text-ink-700 ring-1 ring-ink-200" dir="ltr">{{ json_encode($entry->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                                                text-ink-200 ring-1 ring-white/10" dir="ltr">{{ json_encode($entry->old_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                 </div>
                                             @endif
                                             @if ($entry->new_values)
                                                 <div>
-                                                    <p class="mb-1 text-2xs font-semibold uppercase text-ink-500">
+                                                    <p class="mb-1 text-2xs font-semibold uppercase text-ink-400">
                                                         {{ __('app.common.updated') }} +
                                                     </p>
                                                     <pre class="overflow-x-auto rounded bg-white p-2 font-mono text-2xs
-                                                                text-ink-700 ring-1 ring-ink-200" dir="ltr">{{ json_encode($entry->new_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                                                text-ink-200 ring-1 ring-white/10" dir="ltr">{{ json_encode($entry->new_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                 </div>
                                             @endif
                                             @if ($entry->context)
                                                 <div class="sm:col-span-2">
                                                     <pre class="overflow-x-auto rounded bg-white p-2 font-mono text-2xs
-                                                                text-ink-700 ring-1 ring-ink-200" dir="ltr">{{ json_encode($entry->context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                                                                text-ink-200 ring-1 ring-white/10" dir="ltr">{{ json_encode($entry->context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                 </div>
                                             @endif
                                         </div>
@@ -91,7 +91,7 @@
                 </table>
             </div>
             @if ($entries->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $entries->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $entries->links() }}</div>
             @endif
         @endif
     </x-ui.card>

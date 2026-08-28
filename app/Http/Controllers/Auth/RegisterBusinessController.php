@@ -34,18 +34,24 @@ class RegisterBusinessController extends Controller
         private readonly AuditLogger $auditLogger,
     ) {}
 
-    public function create(): View
+    public function create(Request $request): View
     {
         return view('auth.register', [
             'zones' => Zone::query()->active()->ordered()->get(),
+            // Somebody sending their own parcel is a business of one. Same
+            // form, same pipeline, without the questions that only make sense
+            // to a shop.
+            'individual' => $this->isIndividual($request),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $individual = $this->isIndividual($request);
+
         $validated = $request->validate([
-            'business_name' => ['required', 'string', 'max:120'],
-            'category' => ['required', 'string', Rule::in([
+            'business_name' => [Rule::requiredIf(! $individual), 'nullable', 'string', 'max:120'],
+            'category' => [Rule::requiredIf(! $individual), 'nullable', 'string', Rule::in([
                 'restaurant', 'pharmacy', 'grocery', 'clothing', 'electronics', 'online', 'other',
             ])],
             'contact_name' => ['required', 'string', 'max:120'],
@@ -56,7 +62,7 @@ class RegisterBusinessController extends Controller
             'address_line' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $user = DB::transaction(function () use ($validated): User {
+        $user = DB::transaction(function () use ($validated, $individual): User {
             $user = User::create([
                 'name' => $validated['contact_name'],
                 'email' => $validated['email'],
@@ -71,11 +77,17 @@ class RegisterBusinessController extends Controller
                 ? Zone::find($validated['zone_id'])
                 : null;
 
+            // An individual trades under their own name.
+            $name = $individual
+                ? $validated['contact_name']
+                : $validated['business_name'];
+
             $business = Business::create([
-                'name' => $validated['business_name'],
-                'name_ar' => $validated['business_name'],
-                'slug' => $this->uniqueSlug($validated['business_name']),
-                'category' => $validated['category'],
+                'name' => $name,
+                'name_ar' => $name,
+                'slug' => $this->uniqueSlug($name),
+                'category' => $individual ? 'other' : $validated['category'],
+                'is_individual' => $individual,
                 'contact_person' => $validated['contact_name'],
                 'phone' => $validated['phone'],
                 'email' => $validated['email'],
@@ -108,7 +120,9 @@ class RegisterBusinessController extends Controller
                 action: AuditAction::Created,
                 entity: $business,
                 actor: Actor::user($user),
-                description: 'Business self-registered.',
+                description: $individual
+                    ? 'Individual sender self-registered.'
+                    : 'Business self-registered.',
                 tenantType: 'business',
                 tenantId: $business->id,
             );
@@ -121,6 +135,18 @@ class RegisterBusinessController extends Controller
 
         return redirect()->route('business.dashboard')
             ->with('status', __('app.auth.register').' — '.__('app.name'));
+    }
+
+    /**
+     * Is this the individual door?
+     *
+     * Read from the path rather than the route name: the GET is named and the
+     * POST is not, so a name check silently treats every submission as a shop
+     * and demands a trade name the person does not have.
+     */
+    private function isIndividual(Request $request): bool
+    {
+        return $request->is('register/individual');
     }
 
     private function uniqueSlug(string $name): string

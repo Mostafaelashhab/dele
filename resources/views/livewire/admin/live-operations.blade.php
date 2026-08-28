@@ -7,7 +7,7 @@
                     @class([
                         'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition',
                         'bg-ink-900 text-white' => $showRiders,
-                        'bg-white text-ink-600 ring-1 ring-inset ring-ink-300 hover:bg-ink-50' => ! $showRiders,
+                        'bg-white text-ink-300 ring-1 ring-inset ring-white/15 hover:bg-white/5' => ! $showRiders,
                     ])>
                 <x-ui.icon name="motorcycle" class="size-3.5" />
                 {{ __('app.nav.riders') }}
@@ -27,14 +27,14 @@
                     @class([
                         'inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition',
                         'bg-signal-600 text-white' => $focus === $key,
-                        'bg-white text-ink-700 ring-1 ring-inset ring-ink-200 hover:bg-ink-50' => $focus !== $key,
+                        'bg-white text-ink-200 ring-1 ring-inset ring-white/10 hover:bg-white/5' => $focus !== $key,
                     ])>
                 {{ $filter['label'] }}
                 <span @class([
                     'tnum rounded px-1.5 py-0.5 text-[10px]',
                     'bg-white/20' => $focus === $key,
-                    'bg-ink-100 text-ink-600' => $focus !== $key && $filter['tone'] === 'neutral',
-                    'bg-amber-100 text-amber-800' => $focus !== $key && $filter['tone'] === 'amber',
+                    'bg-white/[0.06] text-ink-300' => $focus !== $key && $filter['tone'] === 'neutral',
+                    'bg-warn-500/15 text-warn-300' => $focus !== $key && $filter['tone'] === 'amber',
                     'bg-red-100 text-red-800' => $focus !== $key && $filter['tone'] === 'red',
                 ])>{{ $filter['count'] }}</span>
             </button>
@@ -45,6 +45,7 @@
         {{-- The map is the instrument, so it gets the space. --}}
         <div class="xl:col-span-3">
             <x-ui.map
+                style="dark"
                 :id="\App\Livewire\Admin\LiveOperations::MAP_ID"
                 :markers="$this->mapConfig()['markers']"
                 :zones="$this->mapConfig()['zones']"
@@ -63,7 +64,7 @@
                 ] as $key)
                     <span class="flex items-center gap-1.5">
                         <span class="size-2.5 rounded-full {{ $key['class'] }} ring-2 ring-white"></span>
-                        <span class="text-2xs text-ink-500">{{ $key['label'] }}</span>
+                        <span class="text-2xs text-ink-400">{{ $key['label'] }}</span>
                     </span>
                 @endforeach
             </div>
@@ -74,12 +75,12 @@
                 @if ($this->deliveries->isEmpty())
                     <x-ui.empty icon="truck" :title="__('app.dashboard.no_active')" compact />
                 @else
-                    <ul class="max-h-75 divide-y divide-ink-100 overflow-y-auto">
+                    <ul class="max-h-75 divide-y divide-white/5 overflow-y-auto">
                         @foreach ($this->deliveries as $delivery)
                             <li wire:key="d-{{ $delivery->id }}">
                                 <a href="{{ route('admin.orders.show', $delivery->order->number) }}" wire:navigate
                                    @class([
-                                       'flex items-center gap-3 px-4 py-2.5 transition hover:bg-ink-50',
+                                       'flex items-center gap-3 px-4 py-2.5 transition hover:bg-white/5',
                                        'bg-red-50/60' => $delivery->isLate(),
                                    ])>
                                     <x-ui.avatar
@@ -88,10 +89,10 @@
                                         size="sm" square />
 
                                     <div class="min-w-0 flex-1">
-                                        <p class="truncate text-xs font-semibold text-ink-900">
+                                        <p class="truncate text-xs font-semibold text-white">
                                             {{ $delivery->order->number }}
                                         </p>
-                                        <p class="truncate text-2xs text-ink-500">
+                                        <p class="truncate text-2xs text-ink-400">
                                             {{ $delivery->order->dropoffSnapshot()->area ?? '—' }}
                                             @if ($delivery->rider)
                                                 · {{ $delivery->rider->name }}
@@ -104,7 +105,7 @@
                                             {{ $delivery->status->label() }}
                                         </x-ui.badge>
                                         <p class="tnum mt-0.5 text-[10px] {{ $delivery->isLate() ? 'font-semibold text-red-600' : 'text-ink-400' }}">
-                                            {{ $delivery->estimatedArrival()?->translatedFormat('H:i') ?? '—' }}
+                                            {{ $delivery->estimatedArrival()?->shortTime() ?? '—' }}
                                         </p>
                                     </div>
                                 </a>
@@ -118,7 +119,7 @@
                 @if ($this->riders->isEmpty())
                     <x-ui.empty icon="users" :title="__('app.common.empty')" compact />
                 @else
-                    <ul class="max-h-55 divide-y divide-ink-100 overflow-y-auto">
+                    <ul class="max-h-55 divide-y divide-white/5 overflow-y-auto">
                         @foreach ($this->riders as $rider)
                             <li class="flex items-center gap-3 px-4 py-2.5" wire:key="r-{{ $rider->id }}">
                                 <x-ui.avatar
@@ -128,8 +129,8 @@
                                     :tone="$rider->active_deliveries_count > 0 ? 'signal' : 'neutral'" />
 
                                 <div class="min-w-0 flex-1">
-                                    <p class="truncate text-xs font-medium text-ink-900">{{ $rider->name }}</p>
-                                    <p class="flex items-center gap-1 truncate text-2xs text-ink-500">
+                                    <p class="truncate text-xs font-medium text-white">{{ $rider->name }}</p>
+                                    <p class="flex items-center gap-1 truncate text-2xs text-ink-400">
                                         <x-ui.icon :name="$rider->vehicle_type->value === 'car' ? 'car' : 'motorcycle'"
                                                    class="size-3 shrink-0" />
                                         {{ $rider->deliveryCompany->displayName() }}
@@ -140,7 +141,7 @@
                                     <span @class([
                                         'inline-block size-2 rounded-full',
                                         'bg-emerald-500' => $rider->status->value === 'online',
-                                        'bg-amber-500' => $rider->status->value === 'busy',
+                                        'bg-warn-500' => $rider->status->value === 'busy',
                                     ])></span>
                                     <p class="tnum text-[10px] text-ink-400">
                                         {{ $rider->location_updated_at?->diffForHumans(short: true) }}

@@ -84,6 +84,7 @@
                     </div>
 
                     <x-ui.map
+                style="dark"
                         :id="\App\Livewire\Business\Orders\CreateOrder::MAP_ID"
                         :markers="$this->mapConfig['markers']"
                         :route="$this->mapConfig['route']"
@@ -143,33 +144,33 @@
         <div class="lg:sticky lg:top-20 lg:self-start">
             <x-ui.card :title="__('delivery.labels.price')">
                 @if ($this->quote === null)
-                    <p class="py-6 text-center text-sm text-ink-500">
+                    <p class="py-6 text-center text-sm text-ink-400">
                         {{ __('address.zone') }} — {{ __('app.common.required') }}
                     </p>
                 @else
-                    <p class="tnum text-3xl font-bold tracking-tight text-ink-900">
+                    <p class="tnum text-3xl font-bold tracking-tight text-white">
                         {{ $this->quote->total->format() }}
                     </p>
 
-                    <dl class="mt-4 space-y-1.5 border-t border-ink-100 pt-3 text-xs">
+                    <dl class="mt-4 space-y-1.5 border-t border-white/5 pt-3 text-xs">
                         @foreach ($this->quote->visibleLines() as $line)
                             <div class="flex justify-between gap-3">
-                                <dt class="text-ink-500">{{ $line->label }}</dt>
-                                <dd class="tnum shrink-0 text-ink-800">{{ $line->amount->format(false) }}</dd>
+                                <dt class="text-ink-400">{{ $line->label }}</dt>
+                                <dd class="tnum shrink-0 text-ink-100">{{ $line->amount->format(false) }}</dd>
                             </div>
                         @endforeach
                     </dl>
 
-                    <dl class="mt-3 space-y-1.5 border-t border-ink-100 pt-3 text-xs">
+                    <dl class="mt-3 space-y-1.5 border-t border-white/5 pt-3 text-xs">
                         <div class="flex justify-between">
-                            <dt class="text-ink-500">{{ __('delivery.labels.distance') }}</dt>
-                            <dd class="tnum text-ink-800">
+                            <dt class="text-ink-400">{{ __('delivery.labels.distance') }}</dt>
+                            <dd class="tnum text-ink-100">
                                 {{ number_format($this->quote->distanceMeters / 1000, 1) }} {{ __('app.common.km') }}
                             </dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-ink-500">{{ __('delivery.labels.eta') }}</dt>
-                            <dd class="tnum text-ink-800">
+                            <dt class="text-ink-400">{{ __('delivery.labels.eta') }}</dt>
+                            <dd class="tnum text-ink-100">
                                 ~{{ $this->quote->estimatedMinutes }} {{ __('app.common.minutes') }}
                             </dd>
                         </div>
@@ -182,7 +183,7 @@
                     <span wire:loading wire:target="save">{{ __('app.common.loading') }}</span>
                 </x-ui.button>
 
-                <p class="mt-3 text-2xs leading-relaxed text-ink-500">
+                <p class="mt-3 text-2xs leading-relaxed text-ink-400">
                     {{ __('app.tagline') }}
                 </p>
             </x-ui.card>

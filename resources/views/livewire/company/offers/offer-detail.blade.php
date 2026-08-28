@@ -22,12 +22,12 @@
         <div class="space-y-5 lg:col-span-2">
             <div class="grid gap-4 sm:grid-cols-2">
                 <x-ui.card :title="__('delivery.labels.pickup')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $order->pickupSnapshot()->contactName }}</p>
-                    <p class="mt-1 text-sm text-ink-600">{{ $order->pickupSnapshot()->fullAddress() }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $order->pickupSnapshot()->contactName }}</p>
+                    <p class="mt-1 text-sm text-ink-300">{{ $order->pickupSnapshot()->fullAddress() }}</p>
                 </x-ui.card>
                 <x-ui.card :title="__('delivery.labels.dropoff')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $order->dropoffSnapshot()->area ?? '—' }}</p>
-                    <p class="mt-1 text-sm text-ink-600">{{ $order->dropoffSnapshot()->addressLine }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $order->dropoffSnapshot()->area ?? '—' }}</p>
+                    <p class="mt-1 text-sm text-ink-300">{{ $order->dropoffSnapshot()->addressLine }}</p>
                 </x-ui.card>
             </div>
 
@@ -38,10 +38,10 @@
                             @continue($key === 'preferred_bonus')
                             <li>
                                 <div class="mb-1 flex items-center justify-between text-xs">
-                                    <span class="min-w-0 pe-2 font-medium text-ink-700">
+                                    <span class="min-w-0 pe-2 font-medium text-ink-200">
                                         {{ __('offer.factor.'.$key) }}
                                     </span>
-                                    <span class="tnum shrink-0 text-ink-500">
+                                    <span class="tnum shrink-0 text-ink-400">
                                         {{ number_format($value * 100, 0) }}%
                                         @if (isset($weights[$key]))
                                             <span class="text-ink-300">
@@ -50,16 +50,16 @@
                                         @endif
                                     </span>
                                 </div>
-                                <div class="h-1.5 overflow-hidden rounded-full bg-ink-100">
+                                <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                                     <div class="h-full rounded-full bg-signal-500"
                                          style="width: {{ min(100, $value * 100) }}%"></div>
                                 </div>
                             </li>
                         @endforeach
                     </ul>
-                    <p class="mt-4 border-t border-ink-100 pt-3 text-xs text-ink-500">
+                    <p class="mt-4 border-t border-white/5 pt-3 text-xs text-ink-400">
                         {{ __('offer.total_score') }}:
-                        <span class="tnum font-semibold text-ink-800">
+                        <span class="tnum font-semibold text-ink-100">
                             {{ number_format(($breakdown['total_score'] ?? 0) * 100, 1) }}%
                         </span>
                     </p>
@@ -69,26 +69,26 @@
 
         <div class="space-y-5">
             <x-ui.card>
-                <p class="text-xs text-ink-500">{{ __('delivery.labels.payout') }}</p>
+                <p class="text-xs text-ink-400">{{ __('delivery.labels.payout') }}</p>
                 <p class="tnum mt-1 text-3xl font-bold text-emerald-700">{{ $offer->payout()->format() }}</p>
 
-                <dl class="mt-4 space-y-2 border-t border-ink-100 pt-3 text-sm">
+                <dl class="mt-4 space-y-2 border-t border-white/5 pt-3 text-sm">
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('delivery.labels.distance') }}</dt>
+                        <dt class="text-ink-400">{{ __('delivery.labels.distance') }}</dt>
                         <dd class="tnum">{{ number_format($delivery->distance_meters / 1000, 1) }} {{ __('app.common.km') }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('delivery.labels.eta') }}</dt>
+                        <dt class="text-ink-400">{{ __('delivery.labels.eta') }}</dt>
                         <dd class="tnum">{{ $offer->quoted_eta_minutes }} {{ __('app.common.minutes') }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="text-ink-500">{{ __('delivery.priority.standard') }}</dt>
+                        <dt class="text-ink-400">{{ __('delivery.priority.standard') }}</dt>
                         <dd>{{ $order->priority->label() }}</dd>
                     </div>
                 </dl>
 
                 @if ($offer->isAnswerable())
-                    <div class="mt-4 space-y-2 border-t border-ink-100 pt-4">
+                    <div class="mt-4 space-y-2 border-t border-white/5 pt-4">
                         <x-ui.button variant="success" size="lg" class="w-full" wire:click="accept">
                             {{ __('rider.app.accept') }}
                         </x-ui.button>

@@ -52,11 +52,11 @@
                                         {{ $settlement->reference }}
                                     </a>
                                 </td>
-                                <td class="text-ink-800">
+                                <td class="text-ink-100">
                                     {{ $party?->name ?? '—' }}
-                                    <p class="text-2xs text-ink-500">{{ $settlement->party_type->label() }}</p>
+                                    <p class="text-2xs text-ink-400">{{ $settlement->party_type->label() }}</p>
                                 </td>
-                                <td class="tnum text-ink-600">
+                                <td class="tnum text-ink-300">
                                     {{ $settlement->period_start->translatedFormat('d M') }}
                                     – {{ $settlement->period_end->translatedFormat('d M') }}
                                 </td>
@@ -87,7 +87,7 @@
                 </table>
             </div>
             @if ($settlements->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $settlements->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $settlements->links() }}</div>
             @endif
         @endif
     </x-ui.card>

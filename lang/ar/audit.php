@@ -19,6 +19,10 @@ return [
         'api_key_revoked' => 'إلغاء مفتاح API',
         'logged_in' => 'تسجيل دخول',
         'login_failed' => 'محاولة دخول فاشلة',
+        'identity_viewed' => 'اطّلاع على وثيقة هوية',
+        'identity_verified' => 'اعتماد الهوية',
+        'identity_rejected' => 'رفض الهوية',
+        'account_approved' => 'اعتماد الحساب',
     ],
 
     'description' => [

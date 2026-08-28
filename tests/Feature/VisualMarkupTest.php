@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Domain\Tracking\TrackingPresenter;
 use App\Enums\DeliveryStatus;
+use App\Enums\OrderEventType;
 use App\Enums\UserRole;
 use App\Models\Business;
 use App\Models\Delivery;
@@ -54,6 +56,26 @@ class VisualMarkupTest extends TestCase
             'rider_id' => $rider->id,
             'status' => DeliveryStatus::InTransit,
         ]);
+
+        // The tracking journey is built from the order's real events, so a
+        // delivery conjured straight into InTransit has nothing to draw. A
+        // real one collects these on its way through the state machine.
+        foreach ([
+            OrderEventType::OrderCreated,
+            OrderEventType::DeliveryAccepted,
+            OrderEventType::RiderAssigned,
+            OrderEventType::OrderPickedUp,
+            OrderEventType::DeliveryStarted,
+        ] as $minute => $type) {
+            $order->events()->create([
+                'delivery_id' => $this->delivery->id,
+                'type' => $type,
+                'actor_type' => 'system',
+                // Only customer-visible events reach the tracking page.
+                'is_customer_visible' => true,
+                'occurred_at' => now()->subMinutes(30 - $minute * 5),
+            ]);
+        }
     }
 
     #[Test]
@@ -74,37 +96,68 @@ class VisualMarkupTest extends TestCase
         $this->assertStringContainsString('admin-live-ops', $html);
     }
 
+    /**
+     * The tracking page carries no map by product decision.
+     *
+     * A customer opening this link wants one answer — where is my parcel and
+     * when does it arrive — and the journey, the status and the estimate give
+     * it without a tile layer. This asserts the removal held rather than
+     * leaving a half-initialised map container behind.
+     */
     #[Test]
-    public function the_tracking_page_renders_a_map_for_a_parcel_in_transit(): void
+    public function the_tracking_page_shows_the_journey_rather_than_a_map(): void
     {
-        $response = $this->get(route('tracking.show', $this->delivery->tracking_token))->assertOk();
+        $html = $this->get(route('tracking.show', $this->delivery->tracking_token))
+            ->assertOk()
+            ->getContent();
 
-        $html = $response->getContent();
+        $this->assertStringNotContainsString('map-surface', $html);
+        $this->assertStringNotContainsString('mapComponent()', $html);
+        $this->assertStringNotContainsString('customer-tracking', $html);
 
-        $this->assertStringContainsString('map-surface', $html);
-        $this->assertStringContainsString('customer-tracking', $html);
+        // What replaced it: the journey, built from the order's real events
+        // rather than a fixed five-step summary.
+        $this->assertStringContainsString('track-step', $html, 'The journey is missing.');
+        $this->assertStringContainsString(OrderEventType::OrderPickedUp->label(), $html);
+        $this->assertStringContainsString(OrderEventType::DeliveryStarted->label(), $html);
+
+        // Each stage carries its own symbol rather than a repeated tick.
+        $this->assertGreaterThan(
+            3,
+            substr_count($html, '<svg'),
+            'The journey should draw a distinct symbol per stage.'
+        );
     }
 
+    /**
+     * A customer sees where the rider is only while the rider has their
+     * parcel — never before, never after.
+     *
+     * The map that used to prove this is gone, but the rule is not: the page
+     * still reports when the rider's position was last updated. Asserted
+     * against the payload rather than the markup, so the guarantee survives
+     * whatever the page chooses to draw with it.
+     */
     #[Test]
-    public function the_tracking_map_carries_the_rider_only_while_they_carry_the_parcel(): void
+    public function the_customer_sees_the_rider_only_while_they_carry_the_parcel(): void
     {
-        // Before pickup the map must not plot the rider at all.
-        $this->delivery->forceFill(['status' => DeliveryStatus::Assigned])->save();
+        $presenter = app(TrackingPresenter::class);
 
-        $html = $this->get(route('tracking.show', $this->delivery->tracking_token))
-            ->assertOk()
-            ->getContent();
+        foreach ([DeliveryStatus::Assigned, DeliveryStatus::Delivered] as $hidden) {
+            $this->delivery->forceFill(['status' => $hidden])->save();
 
-        $this->assertStringNotContainsString('\u0022key\u0022:\u0022rider\u0022', $html);
+            $this->assertNull(
+                $presenter->present($this->delivery->fresh())['rider_position'],
+                "The rider must not be visible while the delivery is {$hidden->value}."
+            );
+        }
 
-        // Once it is in their hands, it appears.
         $this->delivery->forceFill(['status' => DeliveryStatus::InTransit])->save();
 
-        $html = $this->get(route('tracking.show', $this->delivery->tracking_token))
-            ->assertOk()
-            ->getContent();
-
-        $this->assertStringContainsString('\u0022key\u0022:\u0022rider\u0022', $html);
+        $this->assertNotNull(
+            $presenter->present($this->delivery->fresh())['rider_position'],
+            'While carrying the parcel the rider position should be available.'
+        );
     }
 
     #[Test]

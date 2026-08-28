@@ -72,6 +72,26 @@
        Validated with the palette validator against the white card surface:
        adjacent CVD ΔE 25.8, normal-vision ΔE 36.9, both series clear 3:1.
        Series colours dress marks only — never text. */
+    /* ── Status ────────────────────────────────────────────────────────
+       These were borrowed Tailwind defaults rather than part of the system,
+       which is how the warning colour ended up 30° from the brand in OKLCH —
+       close enough that an amber banner read as an ember one. Naming them
+       here makes them the platform's own, and moves warning to a gold that
+       sits 52° away, so "careful" can never be mistaken for "brand".
+
+       Green, gold and red are reserved for state and are never used as a
+       fourth, fifth or sixth accent. */
+    --color-warn-50: #fefce8;
+    --color-warn-100: #fef9c3;
+    --color-warn-200: #fef08a;
+    --color-warn-300: #fde047;
+    --color-warn-400: #facc15;
+    --color-warn-500: #eab308;
+    --color-warn-600: #ca8a04;
+    --color-warn-700: #a16207;
+    --color-warn-800: #854d0e;
+    --color-warn-900: #713f12;
+
     --color-viz-series-1: #1e46d6;
     --color-viz-critical: #d03b3b;
     --color-viz-good: #0ca30c;
@@ -117,6 +137,171 @@
        state for the moment before Alpine runs. */
     [x-cloak] {
         display: none !important;
+    }
+}
+
+@layer components {
+    /* ── The tracking journey ──────────────────────────────────────────
+       A customer opens this page to answer one question, and the timeline is
+       the answer. Rendered as a static list of ticks it reads as a receipt;
+       drawn as it happened it reads as a journey, and the step they are
+       actually on becomes obvious without hunting for a colour.
+
+       Everything runs once on load rather than looping: this is a status, not
+       an ornament, and a page that pulses forever is exhausting to sit with
+       while you wait for a parcel. The one exception is the live step, which
+       keeps breathing because the thing it represents is still happening. */
+
+    @keyframes track-step-in {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: none; }
+    }
+
+    /* The rail grows downward to the step that has been reached. */
+    @keyframes track-rail {
+        from { transform: scaleY(0); }
+        to   { transform: scaleY(1); }
+    }
+
+    @keyframes track-tick {
+        0%   { transform: scale(.4); opacity: 0; }
+        60%  { transform: scale(1.15); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* The step in progress. A halo rather than a colour change, so the ring
+       stays legible while the movement says "still happening". */
+    @keyframes track-live {
+        0%   { box-shadow: 0 0 0 0 rgb(249 92 19 / 50%); }
+        70%  { box-shadow: 0 0 0 10px rgb(249 92 19 / 0%); }
+        100% { box-shadow: 0 0 0 0 rgb(249 92 19 / 0%); }
+    }
+
+    .track-step {
+        opacity: 0;
+        animation: track-step-in .45s cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    .track-rail {
+        transform-origin: top;
+        animation: track-rail .5s cubic-bezier(.4, 0, .2, 1) forwards;
+    }
+
+    .track-tick { animation: track-tick .4s cubic-bezier(.2, .8, .2, 1) backwards; }
+
+    .track-live { animation: track-live 2s ease-out infinite; }
+
+    /* The status header, while the parcel is genuinely moving. */
+    @keyframes track-sheen {
+        from { transform: translateX(-120%); }
+        to   { transform: translateX(220%); }
+    }
+
+    .track-sheen::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        width: 45%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 10%), transparent);
+        animation: track-sheen 3.2s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .track-step,
+        .track-rail,
+        .track-tick,
+        .track-live {
+            animation: none;
+            opacity: 1;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .track-sheen::after { display: none; }
+    }
+}
+
+@layer components {
+    /* ── The handover, in motion ───────────────────────────────────────
+       The section explains a code travelling from a customer's phone to a
+       rider's screen. Two static cards and an arrow describe that; showing
+       the code actually make the journey demonstrates it, and the mechanism
+       is the whole argument of the section.
+
+       One loop drives everything: each element reads the same timeline and
+       acts at its own moment, so nothing can drift out of step. */
+
+    @keyframes handover-digit {
+        0%, 14%   { opacity: 0; transform: translateY(6px) scale(.92); }
+        22%, 100% { opacity: 1; transform: none; }
+    }
+
+    /* The code crossing the gap. Travels along the inline axis, so it moves
+       right-to-left in Arabic and left-to-right in English without a second
+       set of keyframes. */
+    @keyframes handover-travel {
+        0%, 34%  { opacity: 0; transform: translateX(0) scale(.8); }
+        40%      { opacity: 1; transform: translateX(0) scale(1); }
+        62%      { opacity: 1; transform: translateX(var(--handover-distance)) scale(1); }
+        70%, 100% { opacity: 0; transform: translateX(var(--handover-distance)) scale(.8); }
+    }
+
+    @keyframes handover-typed {
+        0%, 62%   { opacity: 0; }
+        70%, 100% { opacity: 1; }
+    }
+
+    @keyframes handover-verified {
+        0%, 76%   { opacity: 0; transform: translateY(4px); }
+        84%, 100% { opacity: 1; transform: none; }
+    }
+
+    /* The line the code runs along, drawn as it goes. */
+    @keyframes handover-trace {
+        0%, 36%   { stroke-dashoffset: 200; }
+        62%, 100% { stroke-dashoffset: 0; }
+    }
+
+    .handover {
+        /* How far the code travels, measured per layout: across the gap on a
+           wide screen, and not at all when the columns stack and the two ends
+           sit above one another. The sign flips for Arabic so the code always
+           moves toward the rider rather than away from them. */
+        --handover-distance: 0px;
+        --handover-cycle: 7s;
+    }
+
+    @media (min-width: 1024px) {
+        .handover { --handover-distance: 4.5rem; }
+        [dir='rtl'] .handover { --handover-distance: -4.5rem; }
+    }
+
+    .handover-digit    { animation: handover-digit var(--handover-cycle) ease-out infinite; }
+    .handover-travel   { animation: handover-travel var(--handover-cycle) cubic-bezier(.4, 0, .2, 1) infinite; }
+    .handover-typed    { animation: handover-typed var(--handover-cycle) ease-out infinite; }
+    .handover-verified { animation: handover-verified var(--handover-cycle) ease-out infinite; }
+
+    .handover-trace {
+        stroke-dasharray: 200;
+        animation: handover-trace var(--handover-cycle) cubic-bezier(.4, 0, .2, 1) infinite;
+    }
+
+    /* Somebody who has asked for less motion still needs the explanation, so
+       the loop stops on its finished state rather than disappearing. */
+    @media (prefers-reduced-motion: reduce) {
+        .handover-digit,
+        .handover-typed,
+        .handover-verified,
+        .handover-trace {
+            animation: none;
+            opacity: 1;
+            transform: none;
+            stroke-dashoffset: 0;
+        }
+
+        .handover-travel { animation: none; opacity: 0; }
     }
 }
 
@@ -216,31 +401,38 @@
     }
 
     .data-table thead th {
-        @apply bg-ink-50 text-2xs font-semibold uppercase tracking-wide text-ink-500
+        @apply bg-white/[0.03] text-2xs font-semibold uppercase tracking-wide text-ink-400
                px-3 py-2 text-start border-b border-ink-200 whitespace-nowrap;
     }
 
     .data-table tbody td {
-        @apply px-3 py-2.5 border-b border-ink-100 align-middle;
+        @apply px-3 py-2.5 border-b border-white/5 align-middle text-ink-200;
     }
 
     .data-table tbody tr:hover {
-        @apply bg-ink-50/70;
+        @apply bg-white/[0.04];
     }
 
     .field-label {
-        @apply block text-xs font-semibold text-ink-700 mb-1.5;
+        @apply block text-xs font-semibold text-ink-200 mb-1.5;
     }
 
+    /* Inputs live on the dark ground now, so they are a lit well rather than
+       a white box: a white field on a near-black panel glares. */
     .field-input {
-        @apply block w-full rounded-md border border-ink-300 bg-white px-3 py-2 text-sm
-               text-ink-900 placeholder:text-ink-400 shadow-xs
-               focus:border-signal-500 focus:ring-2 focus:ring-signal-500/20 focus:outline-none
-               disabled:bg-ink-50 disabled:text-ink-500;
+        @apply block w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 text-sm
+               text-white placeholder:text-ink-500
+               focus:border-ember-500/60 focus:ring-2 focus:ring-ember-500/25 focus:outline-none
+               disabled:bg-white/[0.02] disabled:text-ink-500;
+    }
+
+    /* Native controls do not inherit a dark scheme on their own. */
+    .field-input option {
+        @apply bg-ink-900 text-white;
     }
 
     .field-error {
-        @apply mt-1 text-xs font-medium text-red-600;
+        @apply mt-1 text-xs font-medium text-red-300;
     }
 }
 
@@ -397,10 +589,35 @@
     }
 
     /* Markers are composed from HTML rather than image sprites, so they inherit
-       the interface's type and colour and stay crisp at any density. */
+       the interface's type and colour and stay crisp at any density.
+
+       A place is a pin and a person is a dot. That distinction is the whole
+       point: a coloured circle on a dark map says something is there but not
+       what, and a customer looking at their own tracking page could not tell
+       the destination from the courier. A pin points at a fixed spot on the
+       ground; a dot is something moving across it. */
     .map-marker {
-        @apply flex items-center justify-center rounded-full text-white shadow-md
-               ring-2 ring-white;
+        @apply flex items-center justify-center text-white;
+        /* A dark halo under the light ring, so the marker separates from a
+           pale street and a dark one alike. */
+        filter: drop-shadow(0 2px 4px rgb(13 17 23 / 55%));
+    }
+
+    .map-marker-dot {
+        @apply rounded-full ring-[3px] ring-white;
+    }
+
+    /* The teardrop: round on three corners, pointed on the fourth, then turned
+       so the point sits on the coordinate it marks. */
+    .map-marker-pin {
+        @apply ring-[3px] ring-white;
+        border-radius: 9999px 9999px 9999px 0;
+        rotate: -45deg;
+    }
+
+    /* The glyph turns back, so the icon stays upright inside a rotated pin. */
+    .map-marker-pin > * {
+        rotate: 45deg;
     }
 
     .map-marker-pickup {
@@ -412,7 +629,7 @@
     }
 
     .map-marker-rider {
-        @apply bg-ink-900;
+        @apply bg-ember-500;
     }
 
     .map-marker-late {
@@ -425,13 +642,13 @@
     .map-marker-pulse::after {
         content: '';
         @apply absolute inset-0 rounded-full;
-        box-shadow: 0 0 0 0 rgb(30 70 214 / 45%);
+        box-shadow: 0 0 0 0 rgb(249 92 19 / 50%);
         animation: map-pulse 2.4s ease-out infinite;
     }
 
     @keyframes map-pulse {
-        70% { box-shadow: 0 0 0 14px rgb(30 70 214 / 0%); }
-        100% { box-shadow: 0 0 0 0 rgb(30 70 214 / 0%); }
+        70% { box-shadow: 0 0 0 14px rgb(249 92 19 / 0%); }
+        100% { box-shadow: 0 0 0 0 rgb(249 92 19 / 0%); }
     }
 
     @media (prefers-reduced-motion: reduce) {

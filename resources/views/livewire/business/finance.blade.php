@@ -10,8 +10,8 @@
                     <button type="button" wire:click="$set('range', '{{ $key }}')"
                             @class([
                                 'rounded px-3 py-1.5 text-xs font-semibold transition',
-                                'bg-white text-ink-900 shadow-xs' => $range === $key,
-                                'text-ink-600' => $range !== $key,
+                                'bg-white text-white shadow-xs' => $range === $key,
+                                'text-ink-300' => $range !== $key,
                             ])>{{ $label }}</button>
                 @endforeach
             </div>
@@ -47,15 +47,15 @@
                     <tbody>
                         @foreach ($this->entries as $entry)
                             <tr wire:key="{{ $entry->id }}">
-                                <td class="tnum text-ink-500">
-                                    {{ $entry->occurred_at->translatedFormat('d M H:i') }}
+                                <td class="tnum text-ink-400">
+                                    {{ $entry->occurred_at->translatedFormat('d M g:i A') }}
                                 </td>
-                                <td class="text-ink-700">{{ $entry->delivery?->order?->number ?? '—' }}</td>
-                                <td class="text-ink-600">{{ $entry->category->label() }}</td>
+                                <td class="text-ink-200">{{ $entry->delivery?->order?->number ?? '—' }}</td>
+                                <td class="text-ink-300">{{ $entry->category->label() }}</td>
                                 <td @class([
                                     'tnum text-end font-medium',
                                     'text-emerald-700' => $entry->entry_type->value === 'credit',
-                                    'text-ink-900' => $entry->entry_type->value === 'debit',
+                                    'text-white' => $entry->entry_type->value === 'debit',
                                 ])>
                                     {{ $entry->entry_type->value === 'credit' ? '+' : '−' }}{{ $entry->amount()->format(false) }}
                                 </td>

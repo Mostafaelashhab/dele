@@ -12,6 +12,7 @@ use App\Models\Zone;
 use App\Notifications\Channels\SmsChannel;
 use App\Notifications\Channels\WhatsappChannel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -28,10 +29,35 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureModels();
+        $this->configureDates();
         $this->configureTenancy();
         $this->configureSecurity();
         $this->configureNotifications();
         $this->configureCacheInvalidation();
+    }
+
+    /**
+     * How a time is written for a person to read.
+     *
+     * Egypt reads the clock in twelve hours with ص/م, not in twenty-four, so
+     * "12:19" on a tracking page is ambiguous and "18:40" is simply not how
+     * anybody here says it.
+     *
+     * This lives as one macro rather than a format string repeated across
+     * seventeen views: a convention spelled out in seventeen places is a
+     * convention that will disagree with itself within a month. The meridiem
+     * comes from the locale, so the same call reads ص/م in Arabic and AM/PM
+     * in English.
+     *
+     * Deliberately display-only. Working hours and pricing windows are
+     * compared against stored 24-hour strings and must keep formatting as
+     * H:i — those are data, not prose.
+     */
+    private function configureDates(): void
+    {
+        Carbon::macro('shortTime', fn () => $this->translatedFormat('g:i A'));
+
+        Carbon::macro('shortDateTime', fn () => $this->translatedFormat('j M · g:i A'));
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Domain\Tracking;
 
+use App\Actions\Deliveries\ReportDeliveryIssueAction;
 use App\Enums\DeliveryStatus;
 use App\Models\Delivery;
+use App\Models\DeliveryIssue;
 use App\Models\DeliveryLocation;
 use App\Models\OrderEvent;
 
@@ -59,9 +61,38 @@ class TrackingPresenter
             'rider_position' => $this->riderPosition($delivery),
             'confirmation_code' => $this->confirmationCode($delivery),
             'proof_recorded' => $delivery->hasProofOfDelivery(),
+            'proof_photos' => $this->proofPhotos($delivery),
+            'proof_by_code' => $delivery->confirmation_code_verified_at !== null,
+            'received_by' => $delivery->delivered_at !== null ? $delivery->received_by : null,
             'timeline' => $this->timeline($delivery),
+            'issues' => $this->issues($delivery),
+            'can_report' => app(ReportDeliveryIssueAction::class)->isReportable($delivery),
             'updated_at' => now()->toIso8601String(),
         ];
+    }
+
+    /**
+     * The photographs taken at the door, shown to the person who was waiting.
+     *
+     * Only after delivery: before it there is nothing to show, and a half-
+     * finished handover is not something to publish. These reveal no more than
+     * this page already does — the recipient's own address is on it — and they
+     * are the difference between being told a parcel arrived and being able to
+     * see where it was left.
+     *
+     * @return array<int, string>
+     */
+    private function proofPhotos(Delivery $delivery): array
+    {
+        if ($delivery->delivered_at === null) {
+            return [];
+        }
+
+        return collect(['proof_photo_path', 'proof_photo_secondary_path'])
+            ->map(fn (string $attribute) => $delivery->mediaUrl($attribute))
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
@@ -141,6 +172,35 @@ class TrackingPresenter
                 'label' => $event->type->label(),
                 'status' => $event->to_status?->value,
                 'occurred_at' => $event->occurred_at->toIso8601String(),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The reports this recipient has already made, told back to them.
+     *
+     * Status and nothing more. An operator's resolution note is written for
+     * the order record and for whoever picks the case up next — it is not a
+     * reply to the customer, and publishing it here would turn every internal
+     * remark into one.
+     *
+     * @return array<int, array{category: string, label: string, status: string,
+     *     status_label: string, tone: string, reported_at: string, resolved_at: ?string}>
+     */
+    protected function issues(Delivery $delivery): array
+    {
+        return $delivery->issues()
+            ->oldest()
+            ->get()
+            ->map(fn (DeliveryIssue $issue): array => [
+                'category' => $issue->category->value,
+                'label' => $issue->category->label(),
+                'status' => $issue->status->value,
+                'status_label' => $issue->status->label(),
+                'tone' => $issue->status->tone(),
+                'reported_at' => $issue->created_at->toIso8601String(),
+                'resolved_at' => $issue->resolved_at?->toIso8601String(),
             ])
             ->values()
             ->all();

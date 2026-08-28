@@ -15,6 +15,7 @@ use App\Enums\PaymentType;
 use App\Enums\RiderStatus;
 use App\Models\Delivery;
 use App\Models\DeliveryCompany;
+use App\Models\Order;
 use App\Models\Rider;
 use App\Models\Zone;
 use Illuminate\Contracts\View\View;
@@ -50,6 +51,8 @@ class LandingController extends Controller
             'networkStats' => $this->networkStats(),
             'rankingWeights' => $this->rankingWeights(),
             'fees' => $this->fees($zones),
+            'audiences' => $this->audiences(),
+            'zoneActivity' => $this->zoneActivity(),
         ]);
     }
 
@@ -195,6 +198,94 @@ class LandingController extends Controller
                     ],
                 ], $volumes),
             ];
+        });
+    }
+
+    /**
+     * The four people this network is for.
+     *
+     * The page is built around this rather than around a feature list,
+     * because a shop, a courier fleet, a rider working alone and somebody
+     * posting a parcel are not reading the same page — they are looking for
+     * four different sentences, and only one of them is theirs.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function audiences(): array
+    {
+        return [
+            [
+                'key' => 'individual',
+                'icon' => 'user',
+                'accent' => 'signal',
+                'route' => 'register.individual',
+                'screen' => 'tracking',
+            ],
+            [
+                'key' => 'business',
+                'icon' => 'store',
+                'accent' => 'signal',
+                'route' => 'register.business',
+                'screen' => 'order',
+            ],
+            [
+                'key' => 'company',
+                'icon' => 'truck',
+                'accent' => 'ember',
+                'route' => 'register.company',
+                'screen' => 'dispatch',
+            ],
+            [
+                'key' => 'rider',
+                'icon' => 'motorcycle',
+                'accent' => 'emerald',
+                'route' => 'register.rider',
+                'screen' => 'rider',
+            ],
+        ];
+    }
+
+    /**
+     * Where the network has been busy lately.
+     *
+     * Aimed squarely at a delivery company reading this page: these are real
+     * orders that were distributed and taken, in named areas, without them.
+     * No company is named — that would be telling one subscriber's business to
+     * another — and no number is invented. If the network is quiet, this says
+     * so by being short rather than by being padded.
+     *
+     * @return array<int, array{zone: string, orders: int, share: int}>
+     */
+    private function zoneActivity(): array
+    {
+        return Cache::remember('landing.zone-activity.'.app()->getLocale(), now()->addMinutes(self::CACHE_TTL_MINUTES), function (): array {
+            $counts = Order::query()
+                ->where('created_at', '>=', now()->subDays(30))
+                ->whereNotNull('dropoff_zone_id')
+                ->selectRaw('dropoff_zone_id, count(*) as total')
+                ->groupBy('dropoff_zone_id')
+                ->orderByDesc('total')
+                ->limit(6)
+                ->pluck('total', 'dropoff_zone_id');
+
+            if ($counts->isEmpty()) {
+                return [];
+            }
+
+            $zones = Zone::query()->whereIn('id', $counts->keys())->get()->keyBy('id');
+            $peak = max(1, (int) $counts->max());
+
+            return $counts
+                ->map(fn (int $total, string $zoneId) => [
+                    'zone' => $zones[$zoneId]?->displayName() ?? '',
+                    'orders' => $total,
+                    // Relative to the busiest area, so the bar is readable
+                    // whether the network did ten orders or ten thousand.
+                    'share' => (int) round(($total / $peak) * 100),
+                ])
+                ->filter(fn (array $row) => $row['zone'] !== '')
+                ->values()
+                ->all();
         });
     }
 

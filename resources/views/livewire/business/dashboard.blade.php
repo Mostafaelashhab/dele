@@ -17,20 +17,33 @@
                    icon="clock" :tone="$this->metrics['late'] > 0 ? 'red' : 'neutral'" />
     </div>
 
-    <div class="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <x-ui.stat :label="__('app.dashboard.failed_deliveries')" :value="$this->metrics['failed']"
-                   icon="alert" :tone="$this->metrics['failed'] > 0 ? 'red' : 'neutral'" />
-        <x-ui.stat :label="__('app.dashboard.total_cost')" :value="$this->metrics['cost']->format(false)"
-                   icon="money" />
-        <x-ui.stat :label="__('app.dashboard.average_time')"
-                   :value="$this->metrics['average_minutes'] !== null
-                       ? $this->metrics['average_minutes'].' '.__('app.common.minutes')
-                       : '—'"
-                   icon="clock" />
-        <x-ui.stat :label="__('finance.settlement.open')"
-                   :value="$this->metrics['outstanding']->absolute()->format(false)"
-                   :href="route('business.finance')" icon="receipt" />
-    </div>
+    {{-- Reference figures, not decisions: one strip rather than a second row
+         of cards competing with the four above. --}}
+    <x-ui.stat-row class="mt-3" :items="[
+        [
+            'label' => __('app.dashboard.failed_deliveries'),
+            'value' => (string) $this->metrics['failed'],
+            'icon' => 'alert',
+            'tone' => $this->metrics['failed'] > 0 ? 'red' : null,
+        ],
+        [
+            'label' => __('app.dashboard.total_cost'),
+            'value' => $this->metrics['cost']->format(false),
+            'icon' => 'money',
+        ],
+        [
+            'label' => __('app.dashboard.average_time'),
+            'value' => $this->metrics['average_minutes'] !== null
+                ? $this->metrics['average_minutes'].' '.__('app.common.minutes')
+                : '—',
+            'icon' => 'clock',
+        ],
+        [
+            'label' => __('finance.settlement.open'),
+            'value' => $this->metrics['outstanding']->absolute()->format(false),
+            'icon' => 'receipt',
+        ],
+    ]" />
 
     <x-ui.card class="mt-4">
         <x-chart.columns
@@ -55,7 +68,7 @@
         <x-ui.card class="mt-4" :title="__('app.dashboard.where_now')" flush>
             <x-ui.map
                 id="business-live"
-                style="muted"
+                style="dark"
                 :markers="$this->mapMarkers"
                 :height="320"
                 :mobile-height="240"
@@ -98,7 +111,7 @@
                                             {{ $delivery->order->number }}
                                         </a>
                                     </td>
-                                    <td class="text-ink-700">{{ $delivery->order->dropoffSnapshot()->contactName }}</td>
+                                    <td class="text-ink-200">{{ $delivery->order->dropoffSnapshot()->contactName }}</td>
                                     <td>
                                         @if ($delivery->deliveryCompany)
                                             <span class="flex items-center gap-2">
@@ -106,7 +119,7 @@
                                                     :src="$delivery->deliveryCompany->mediaUrl('logo_path')"
                                                     :name="$delivery->deliveryCompany->displayName()"
                                                     icon="truck" size="xs" square />
-                                                <span class="truncate text-ink-700">
+                                                <span class="truncate text-ink-200">
                                                     {{ $delivery->deliveryCompany->displayName() }}
                                                 </span>
                                             </span>
@@ -119,8 +132,8 @@
                                             {{ $delivery->status->label() }}
                                         </x-ui.badge>
                                     </td>
-                                    <td class="tnum text-end {{ $delivery->isLate() ? 'text-red-600' : 'text-ink-500' }}">
-                                        {{ $delivery->estimatedArrival()?->translatedFormat('H:i') ?? '—' }}
+                                    <td class="tnum text-end {{ $delivery->isLate() ? 'text-red-600' : 'text-ink-400' }}">
+                                        {{ $delivery->estimatedArrival()?->shortTime() ?? '—' }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -131,15 +144,15 @@
         </x-ui.card>
 
         <x-ui.card :title="__('app.dashboard.recent_orders')" flush>
-            <ul class="divide-y divide-ink-100">
+            <ul class="divide-y divide-white/5">
                 @forelse ($this->recent as $delivery)
                     <li class="px-4 py-2.5">
                         <div class="flex items-center justify-between gap-3">
                             <a href="{{ route('business.orders.show', $delivery->order->number) }}" wire:navigate
-                               class="truncate text-sm font-medium text-ink-900 hover:text-signal-700">
+                               class="truncate text-sm font-medium text-white hover:text-signal-700">
                                 {{ $delivery->order->number }}
                             </a>
-                            <span class="tnum shrink-0 text-sm text-ink-700">{{ $delivery->price()->format(false) }}</span>
+                            <span class="tnum shrink-0 text-sm text-ink-200">{{ $delivery->price()->format(false) }}</span>
                         </div>
                         <div class="mt-1 flex items-center justify-between gap-3">
                             <span class="flex min-w-0 items-center gap-1.5">

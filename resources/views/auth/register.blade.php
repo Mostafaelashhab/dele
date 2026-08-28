@@ -1,4 +1,6 @@
-<x-layouts.guest :title="__('app.auth.register_business')" audience="business">
+@php $heading = $individual ? __('app.auth.register_individual') : __('app.auth.register_business'); @endphp
+
+<x-layouts.guest :title="$heading" audience="business">
     <a href="{{ route('register') }}"
        class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-500
               transition hover:text-ink-800">
@@ -9,21 +11,23 @@
     <div class="mt-5 flex items-start gap-3.5">
         <span class="flex size-11 shrink-0 items-center justify-center rounded-xl
                      bg-signal-100 text-signal-700">
-            <x-ui.icon name="store" class="size-6" />
+            <x-ui.icon :name="$individual ? 'user' : 'store'" class="size-6" />
         </span>
         <div class="min-w-0">
             <h1 class="text-xl font-bold tracking-tight text-ink-950">
-                {{ __('app.auth.register_business') }}
+                {{ $heading }}
             </h1>
             <p class="mt-1 text-sm leading-relaxed text-ink-500">
-                {{ __('marketing.choose.business_body') }}
+                {{ $individual ? __('marketing.choose.individual_body') : __('marketing.choose.business_body') }}
             </p>
         </div>
     </div>
 
-    <form method="POST" action="{{ route('register.business') }}" class="mt-7 space-y-7">
+    <form method="POST" action="{{ route($individual ? 'register.individual' : 'register.business') }}" class="mt-7 space-y-7">
         @csrf
 
+        {{-- A person sending a parcel has no trade name and no category. --}}
+        @unless ($individual)
         <x-ui.fieldset :legend="__('app.auth.group_about_business')">
             <x-ui.field :label="__('app.auth.business_name')" name="business_name" required>
                 <input type="text" id="business_name" name="business_name" value="{{ old('business_name') }}"
@@ -55,6 +59,7 @@
                 </x-ui.field>
             </div>
         </x-ui.fieldset>
+        @endunless
 
         <x-ui.fieldset :legend="__('app.auth.group_contact')">
             <x-ui.field :label="__('app.auth.contact_name')" name="contact_name" required>
@@ -89,7 +94,7 @@
 
         <div>
             <x-ui.button type="submit" size="lg" class="w-full">
-                {{ __('app.auth.register_business') }}
+                {{ $heading }}
             </x-ui.button>
             <p class="mt-2.5 text-center text-xs leading-relaxed text-ink-500">
                 {{ __('marketing.choose.business_note') }}

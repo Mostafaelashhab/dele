@@ -6,6 +6,9 @@
     // the same decision.
     'audience' => 'both',
     'wide' => false,
+    // Renders the slot straight onto the dark ground instead of on a lit
+    // panel — for pages that are a set of choices rather than a form.
+    'bare' => false,
 ])
 
 @php
@@ -63,10 +66,7 @@
 
         <header class="mx-auto flex w-full max-w-6xl items-center gap-3 px-5 py-5">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                <span class="flex size-8 items-center justify-center rounded-lg bg-ember-500 text-white">
-                    <x-ui.icon name="truck" class="size-5" />
-                </span>
-                <span class="text-base font-bold text-white">{{ __('app.name') }}</span>
+                <x-ui.logo wordmark class="text-white" />
             </a>
 
             <div class="ms-auto flex items-center gap-1">
@@ -127,9 +127,13 @@
                 @endunless
 
                 <div class="w-full">
-                    <div class="panel-lit p-6 sm:p-8">
+                    @if ($bare)
                         {{ $slot }}
-                    </div>
+                    @else
+                        <div class="panel-lit p-6 sm:p-8">
+                            {{ $slot }}
+                        </div>
+                    @endif
 
                     {{-- The narrow-screen home for the assurances the pitch
                          panel carries on a wide one. --}}

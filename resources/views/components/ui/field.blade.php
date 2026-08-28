@@ -18,7 +18,7 @@
     {{ $slot }}
 
     @if ($hint)
-        <p class="mt-1 text-xs text-ink-500">{{ $hint }}</p>
+        <p class="mt-1 text-xs text-ink-400">{{ $hint }}</p>
     @endif
 
     @if ($name)

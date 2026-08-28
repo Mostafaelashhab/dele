@@ -17,7 +17,7 @@
     ];
 
     $tones = [
-        'neutral' => 'bg-ink-100 text-ink-600 ring-ink-200',
+        'neutral' => 'bg-white/[0.08] text-ink-300 ring-white/15',
         'signal' => 'bg-signal-50 text-signal-700 ring-signal-200',
         'green' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
         'dark' => 'bg-ink-900 text-white ring-ink-800',

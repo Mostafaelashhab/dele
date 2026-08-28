@@ -19,42 +19,42 @@
         <x-ui.card :title="__('app.common.details')">
             <dl class="space-y-2.5 text-sm">
                 <div class="flex justify-between gap-3">
-                    <dt class="text-ink-500">{{ __('app.common.phone') }}</dt>
-                    <dd class="tnum text-ink-800" dir="ltr">{{ $business->phone }}</dd>
+                    <dt class="text-ink-400">{{ __('app.common.phone') }}</dt>
+                    <dd class="tnum text-ink-100" dir="ltr">{{ $business->phone }}</dd>
                 </div>
                 <div class="flex justify-between gap-3">
-                    <dt class="text-ink-500">{{ __('app.common.email') }}</dt>
-                    <dd class="truncate text-ink-800" dir="ltr">{{ $business->email ?? '—' }}</dd>
+                    <dt class="text-ink-400">{{ __('app.common.email') }}</dt>
+                    <dd class="truncate text-ink-100" dir="ltr">{{ $business->email ?? '—' }}</dd>
                 </div>
                 <div class="flex justify-between gap-3">
-                    <dt class="text-ink-500">{{ __('address.zone') }}</dt>
-                    <dd class="text-ink-800">{{ $business->defaultZone?->displayName() ?? '—' }}</dd>
+                    <dt class="text-ink-400">{{ __('address.zone') }}</dt>
+                    <dd class="text-ink-100">{{ $business->defaultZone?->displayName() ?? '—' }}</dd>
                 </div>
                 <div class="flex justify-between gap-3">
-                    <dt class="text-ink-500">{{ __('app.dashboard.platform_fees') }}</dt>
-                    <dd class="tnum text-ink-800">
+                    <dt class="text-ink-400">{{ __('app.dashboard.platform_fees') }}</dt>
+                    <dd class="tnum text-ink-100">
                         {{ number_format($business->platformFeeBasisPoints() / 100, 1) }}%
                     </dd>
                 </div>
                 <div class="flex justify-between gap-3">
-                    <dt class="text-ink-500">{{ __('app.dashboard.average_time') }}</dt>
-                    <dd class="tnum text-ink-800">
+                    <dt class="text-ink-400">{{ __('app.dashboard.average_time') }}</dt>
+                    <dd class="tnum text-ink-100">
                         {{ $s['average_minutes'] !== null ? $s['average_minutes'].' '.__('app.common.minutes') : '—' }}
                     </dd>
                 </div>
-                <div class="flex justify-between gap-3 border-t border-ink-100 pt-2.5">
-                    <dt class="text-ink-500">{{ __('finance.settlement.open') }}</dt>
-                    <dd class="tnum font-semibold text-ink-900">{{ $s['balance']->format(false) }}</dd>
+                <div class="flex justify-between gap-3 border-t border-white/5 pt-2.5">
+                    <dt class="text-ink-400">{{ __('finance.settlement.open') }}</dt>
+                    <dd class="tnum font-semibold text-white">{{ $s['balance']->format(false) }}</dd>
                 </div>
             </dl>
         </x-ui.card>
 
         <x-ui.card :title="__('app.nav.team')" flush>
-            <ul class="divide-y divide-ink-100">
+            <ul class="divide-y divide-white/5">
                 @foreach ($business->users as $user)
                     <li class="px-4 py-2.5">
-                        <p class="text-sm font-medium text-ink-900">{{ $user->name }}</p>
-                        <p class="truncate text-2xs text-ink-500" dir="ltr">{{ $user->email }}</p>
+                        <p class="text-sm font-medium text-white">{{ $user->name }}</p>
+                        <p class="truncate text-2xs text-ink-400" dir="ltr">{{ $user->email }}</p>
                     </li>
                 @endforeach
             </ul>
@@ -64,10 +64,10 @@
             @if ($business->companyPreferences->isEmpty())
                 <x-ui.empty icon="truck" :title="__('app.common.none')" />
             @else
-                <ul class="divide-y divide-ink-100">
+                <ul class="divide-y divide-white/5">
                     @foreach ($business->companyPreferences as $preference)
                         <li class="flex items-center justify-between gap-3 px-4 py-2.5">
-                            <span class="truncate text-sm text-ink-800">
+                            <span class="truncate text-sm text-ink-100">
                                 {{ $preference->deliveryCompany->displayName() }}
                             </span>
                             <x-ui.badge :tone="$preference->preference === 'preferred' ? 'green' : 'red'">
@@ -103,7 +103,7 @@
                                     {{ $delivery->order->number }}
                                 </a>
                             </td>
-                            <td class="text-ink-700">
+                            <td class="text-ink-200">
                                 {{ $delivery->deliveryCompany?->displayName() ?? __('app.common.unassigned') }}
                             </td>
                             <td>
@@ -112,8 +112,8 @@
                                 </x-ui.badge>
                             </td>
                             <td class="tnum text-end">{{ $delivery->price()->format(false) }}</td>
-                            <td class="tnum text-end text-ink-500">
-                                {{ $delivery->created_at->translatedFormat('d M H:i') }}
+                            <td class="tnum text-end text-ink-400">
+                                {{ $delivery->created_at->translatedFormat('d M g:i A') }}
                             </td>
                         </tr>
                     @endforeach

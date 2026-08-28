@@ -21,23 +21,23 @@
                     @foreach ($this->zones as $zone)
                         <tr wire:key="{{ $zone->id }}">
                             <td>
-                                <p class="font-medium text-ink-900">{{ $zone->displayName() }}</p>
-                                <p class="text-2xs text-ink-500">{{ $zone->code }}</p>
+                                <p class="font-medium text-white">{{ $zone->displayName() }}</p>
+                                <p class="text-2xs text-ink-400">{{ $zone->code }}</p>
                             </td>
                             <td class="text-center">
                                 <input type="checkbox" wire:model="areas.{{ $zone->id }}.pickup"
-                                       class="size-4 rounded border-ink-300 text-signal-600">
+                                       class="size-4 rounded border-white/15 text-signal-600">
                             </td>
                             <td class="text-center">
                                 <input type="checkbox" wire:model="areas.{{ $zone->id }}.dropoff"
-                                       class="size-4 rounded border-ink-300 text-signal-600">
+                                       class="size-4 rounded border-white/15 text-signal-600">
                             </td>
                             <td class="text-end">
                                 <input type="number" step="0.5" min="0"
                                        wire:model="areas.{{ $zone->id }}.surcharge"
                                        class="field-input tnum ms-auto w-24 py-1 text-end">
                             </td>
-                            <td class="tnum text-end text-ink-500">
+                            <td class="tnum text-end text-ink-400">
                                 {{ $zone->estimated_minutes }} {{ __('app.common.minutes') }}
                             </td>
                         </tr>

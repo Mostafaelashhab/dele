@@ -44,6 +44,19 @@ final readonly class Actor
         return new self('business', $business->id, $business->name);
     }
 
+    /**
+     * The person waiting for the parcel.
+     *
+     * They hold no account, so there is no id to carry — only the fact that a
+     * human on the receiving end caused this, which is precisely what an
+     * operator reading the timeline needs to tell apart from an automatic
+     * status change.
+     */
+    public static function customer(): self
+    {
+        return new self('customer', null, __('tracking.issue.actor'));
+    }
+
     public static function api(string $clientId, string $label): self
     {
         return new self('api_client', $clientId, $label);

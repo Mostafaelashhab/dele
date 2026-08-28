@@ -175,6 +175,45 @@ class PortalAccessTest extends TestCase
         $this->assertAuthenticated();
     }
 
+    /**
+     * Somebody sending their own parcel, with no shop behind them.
+     *
+     * The landing page invites an individual to send something, so this holds
+     * the product to that invitation: the same pipeline as a shop, without
+     * the trade name and category a person does not have.
+     */
+    #[Test]
+    public function an_individual_can_register_to_send_without_a_shop(): void
+    {
+        $response = $this->post('/register/individual', [
+            'contact_name' => 'مصطفى سالم',
+            'phone' => '01111222333',
+            'email' => 'person@banha.test',
+            'password' => 'correct-horse-battery',
+            'password_confirmation' => 'correct-horse-battery',
+        ]);
+
+        $response->assertRedirect(route('business.dashboard'));
+        $this->assertAuthenticated();
+
+        $business = Business::where('phone', '01111222333')->sole();
+
+        $this->assertTrue($business->is_individual);
+        $this->assertSame('مصطفى سالم', $business->name, 'An individual trades under their own name.');
+    }
+
+    #[Test]
+    public function a_shop_still_has_to_say_what_it_is(): void
+    {
+        $this->post('/register/business', [
+            'contact_name' => 'كريم فؤاد',
+            'phone' => '01111222444',
+            'email' => 'shop@banha.test',
+            'password' => 'correct-horse-battery',
+            'password_confirmation' => 'correct-horse-battery',
+        ])->assertSessionHasErrors(['business_name', 'category']);
+    }
+
     #[Test]
     public function a_delivery_company_can_register_itself_but_starts_pending(): void
     {

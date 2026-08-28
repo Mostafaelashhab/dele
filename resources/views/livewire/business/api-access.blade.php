@@ -3,15 +3,15 @@
 
     @if ($revealedKey)
         {{-- Shown exactly once. The warning is the whole point of the panel. --}}
-        <div class="mb-5 rounded-card border-2 border-amber-300 bg-amber-50 p-4">
+        <div class="mb-5 rounded-card border-2 border-warn-500/35 bg-warn-500/10 p-4">
             <div class="flex items-start gap-2.5">
-                <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-amber-700" />
+                <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-warn-300" />
                 <div class="min-w-0 flex-1">
-                    <p class="text-sm font-semibold text-amber-900">{{ __('app.nav.api') }}</p>
-                    <p class="mt-1 text-xs text-amber-800">{{ __('form.webhook_secret_notice') }}</p>
+                    <p class="text-sm font-semibold text-warn-200">{{ __('app.nav.api') }}</p>
+                    <p class="mt-1 text-xs text-warn-300">{{ __('form.webhook_secret_notice') }}</p>
                     <div x-data="{ copied: false }" class="mt-3 flex items-center gap-2">
                         <code class="min-w-0 flex-1 truncate rounded bg-white px-3 py-2 font-mono text-xs
-                                     text-ink-900 ring-1 ring-amber-200" dir="ltr">{{ $revealedKey }}</code>
+                                     text-white ring-1 ring-warn-500/30" dir="ltr">{{ $revealedKey }}</code>
                         <x-ui.button variant="secondary" size="sm"
                                      x-on:click="copied = await window.copyToClipboard(@js($revealedKey))">
                             <span x-text="copied ? @js(__('app.common.copied')) : @js(__('app.common.copy'))"></span>
@@ -26,11 +26,11 @@
     @endif
 
     @if ($revealedSecret)
-        <div class="mb-5 rounded-card border-2 border-amber-300 bg-amber-50 p-4">
-            <p class="text-sm font-semibold text-amber-900">{{ __('app.nav.webhooks') }}</p>
+        <div class="mb-5 rounded-card border-2 border-warn-500/35 bg-warn-500/10 p-4">
+            <p class="text-sm font-semibold text-warn-200">{{ __('app.nav.webhooks') }}</p>
             <div x-data="{ copied: false }" class="mt-3 flex items-center gap-2">
                 <code class="min-w-0 flex-1 truncate rounded bg-white px-3 py-2 font-mono text-xs
-                             text-ink-900 ring-1 ring-amber-200" dir="ltr">{{ $revealedSecret }}</code>
+                             text-white ring-1 ring-warn-500/30" dir="ltr">{{ $revealedSecret }}</code>
                 <x-ui.button variant="secondary" size="sm"
                              x-on:click="copied = await window.copyToClipboard(@js($revealedSecret))">
                     <span x-text="copied ? @js(__('app.common.copied')) : @js(__('app.common.copy'))"></span>
@@ -59,8 +59,8 @@
                         <div wire:key="{{ $client->id }}">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="min-w-0">
-                                    <p class="truncate text-sm font-semibold text-ink-900">{{ $client->name }}</p>
-                                    <p class="text-2xs text-ink-500">
+                                    <p class="truncate text-sm font-semibold text-white">{{ $client->name }}</p>
+                                    <p class="text-2xs text-ink-400">
                                         {{ $client->environment }} · {{ $client->rateLimit() }}/min
                                     </p>
                                 </div>
@@ -70,10 +70,10 @@
                                 </x-ui.button>
                             </div>
 
-                            <ul class="mt-3 divide-y divide-ink-100 border-t border-ink-100">
+                            <ul class="mt-3 divide-y divide-white/5 border-t border-white/5">
                                 @foreach ($client->keys as $key)
                                     <li class="flex items-center justify-between gap-3 py-2">
-                                        <code class="truncate font-mono text-2xs text-ink-600" dir="ltr">
+                                        <code class="truncate font-mono text-2xs text-ink-300" dir="ltr">
                                             {{ $key->prefix }}…{{ $key->last_four }}
                                         </code>
                                         <div class="flex shrink-0 items-center gap-2">
@@ -107,11 +107,11 @@
 
                 <x-ui.field :label="__('form.webhook_events')" name="webhookEvents" required>
                     <div class="grid max-h-44 grid-cols-1 gap-1.5 overflow-y-auto rounded-md border
-                                border-ink-200 p-2 sm:grid-cols-2">
+                                border-white/10 p-2 sm:grid-cols-2">
                         @foreach ($availableEvents as $event)
-                            <label class="flex items-center gap-2 text-xs text-ink-700">
+                            <label class="flex items-center gap-2 text-xs text-ink-200">
                                 <input type="checkbox" value="{{ $event->value }}" wire:model="webhookEvents"
-                                       class="size-3.5 rounded border-ink-300 text-signal-600">
+                                       class="size-3.5 rounded border-white/15 text-signal-600">
                                 <code class="font-mono" dir="ltr">{{ $event->value }}</code>
                             </label>
                         @endforeach
@@ -122,12 +122,12 @@
             </form>
 
             @if ($this->endpoints->isNotEmpty())
-                <ul class="mt-5 divide-y divide-ink-100 border-t border-ink-100">
+                <ul class="mt-5 divide-y divide-white/5 border-t border-white/5">
                     @foreach ($this->endpoints as $endpoint)
                         <li class="flex items-center justify-between gap-3 py-2.5" wire:key="{{ $endpoint->id }}">
                             <div class="min-w-0">
-                                <p class="truncate font-mono text-xs text-ink-800" dir="ltr">{{ $endpoint->url }}</p>
-                                <p class="text-2xs text-ink-500">{{ count($endpoint->events) }} events</p>
+                                <p class="truncate font-mono text-xs text-ink-100" dir="ltr">{{ $endpoint->url }}</p>
+                                <p class="text-2xs text-ink-400">{{ count($endpoint->events) }} events</p>
                             </div>
                             <div class="flex shrink-0 items-center gap-2">
                                 <x-ui.badge :tone="$endpoint->disabled_at ? 'red' : 'green'" dot>

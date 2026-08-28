@@ -22,11 +22,22 @@ class SitemapController extends Controller
      */
     private const PAGES = [
         'home' => ['changefreq' => 'daily', 'priority' => '1.0'],
+        'learn' => ['changefreq' => 'monthly', 'priority' => '0.9'],
+        'coverage' => ['changefreq' => 'weekly', 'priority' => '0.8'],
+        'faq' => ['changefreq' => 'monthly', 'priority' => '0.7'],
         'register' => ['changefreq' => 'monthly', 'priority' => '0.8'],
         'register.business' => ['changefreq' => 'monthly', 'priority' => '0.7'],
         'register.company' => ['changefreq' => 'monthly', 'priority' => '0.7'],
         'login' => ['changefreq' => 'yearly', 'priority' => '0.3'],
     ];
+
+    /**
+     * The per-role guides, which are real indexable pages rather than
+     * fragments of one long document.
+     *
+     * @var array<int, string>
+     */
+    private const GUIDES = ['individual', 'business', 'company', 'rider'];
 
     public function __invoke(): Response
     {
@@ -37,6 +48,12 @@ class SitemapController extends Controller
                 'changefreq' => $meta['changefreq'],
                 'priority' => $meta['priority'],
             ])
+            ->values()
+            ->merge(collect(self::GUIDES)->map(fn (string $audience) => [
+                'loc' => route('learn.show', $audience),
+                'changefreq' => 'monthly',
+                'priority' => '0.8',
+            ]))
             ->values();
 
         return response()

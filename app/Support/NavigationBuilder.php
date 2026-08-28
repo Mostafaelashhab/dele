@@ -37,6 +37,7 @@ class NavigationBuilder
                 'items' => [
                     ['route' => 'admin.dashboard', 'label' => __('app.nav.dashboard'), 'icon' => 'dashboard'],
                     ['route' => 'admin.live', 'label' => __('app.nav.live'), 'icon' => 'map'],
+                    ['route' => 'admin.review', 'label' => __('review.title'), 'icon' => 'shield'],
                     ['route' => 'admin.orders.index', 'label' => __('app.nav.orders'), 'icon' => 'package'],
                 ],
             ],

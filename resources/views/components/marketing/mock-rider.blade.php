@@ -55,7 +55,7 @@
 
             <div class="mt-2.5 flex items-center justify-between border-t border-ink-100 pt-2">
                 <span class="text-[9px] text-ink-500">٢.٤ كم</span>
-                <span class="text-[9px] font-bold text-amber-700">٤٨ث</span>
+                <span class="text-[9px] font-bold text-warn-700">٤٨ث</span>
             </div>
         </article>
 

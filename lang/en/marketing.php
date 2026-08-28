@@ -1,24 +1,23 @@
 <?php
 
 return [
-    'badge' => 'Live tracking on every delivery',
+    'badge' => 'Running in Banha right now',
 
     // The headline is split so the middle phrase can carry the accent colour —
     // the page has colour from its first line, before any visual loads.
     'headline' => [
-        'one' => 'One system',
-        'accent' => 'for all your',
-        'two' => 'deliveries.',
+        'one' => 'Send it across Banha.',
+        'accent' => 'Without hunting for anyone.',
     ],
 
-    'hero_body' => 'Connect your shop to every delivery company in Banha from one place. Create the order, let the network pick the best available company, and follow it to the customer’s door.',
+    'hero_body' => 'Say where from and where to, and the order reaches every delivery company and rider in that area at the same moment. The price is shown before you confirm, and whoever receives it follows a link.',
 
-    'stat_one_value' => 'Minutes',
-    'stat_one_label' => 'from order to a company accepting',
-    'stat_two_value' => 'Companies',
-    'stat_two_label' => 'competing for it, not one phone call',
-    'stat_three_value' => 'No app',
-    'stat_three_label' => 'your customer just opens a link',
+    'stat_one_value' => 'Price first',
+    'stat_one_label' => 'Calculated and shown before you confirm the order',
+    'stat_two_value' => 'A link',
+    'stat_two_label' => 'Whoever receives it follows along with no app to install',
+    'stat_three_value' => 'A code',
+    'stat_three_label' => 'Nobody but the recipient can take the parcel',
 
     // Labels for the cards floating over the hero visual.
     'float' => [
@@ -30,7 +29,12 @@ return [
         'accepted_value' => 'Banha Express',
     ],
 
-    'cta_business' => 'Register your business',
+    'cta_business' => 'Book a delivery',
+    'menu' => 'Menu',
+    'close_menu' => 'Close menu',
+    'closing_title' => 'Start now',
+    'closing_body' => 'Create your account and send your first parcel today. No subscription and no commitment.',
+    'closing_others' => 'Run a shop, a delivery company, or ride independently?',
     'cta_login' => 'Sign in',
     'cta_track' => 'Track a delivery',
 
@@ -122,6 +126,53 @@ return [
      * an invented statistic. The page used to present a solution to a problem
      * it never named, so the reader never got the "that's my day" moment.
      */
+    /*
+     * The segmentation — the page's new spine.
+     *
+     * Four people read this page looking for four different sentences, and
+     * only one of them is theirs. So the page asks who you are and changes,
+     * rather than listing features and leaving you to hunt.
+     */
+    'who' => [
+        'eyebrow' => 'Which one are you?',
+        'title' => 'The network works from four sides.',
+        'body' => 'Pick the one you are, and see it from where you stand.',
+
+        'individual_tab' => 'I want to send something',
+        'individual_line' => 'No shop, no paperwork.',
+        'individual_screen' => 'This is what whoever receives it sees on their phone.',
+
+        'business_tab' => 'I run a shop',
+        'business_line' => 'Order once; the companies compete.',
+        'business_screen' => 'The order screen — the price forms as you type.',
+
+        'company_tab' => 'I run a delivery company',
+        'company_line' => 'Orders are being distributed. Be inside it.',
+        'company_screen' => 'Offers arrive like this, and you accept or decline.',
+
+        'rider_tab' => 'I ride on my own',
+        'rider_line' => 'Nobody behind you? Register in your own name.',
+        'rider_screen' => 'The rider screen — one job in front of you at a time.',
+    ],
+
+    /*
+     * Pressure on the companies — real numbers, no company named.
+     */
+    'pressure' => [
+        'eyebrow' => 'The network right now',
+        'title' => 'This is what was distributed without you.',
+        'body' => 'Real orders, offered and taken, in these areas. We do not say who took them — we say they were taken.',
+        'window' => 'Last 30 days',
+        'orders_word' => 'orders',
+        'empty' => 'No orders in this period yet.',
+        'closer' => 'Every area with a number on it has people working in it. A company outside the network never sees these numbers at all.',
+
+        'live_orders' => 'orders distributed',
+        'live_companies' => 'companies inside',
+        'live_riders' => 'riders available',
+        'live_zones' => 'zones covered',
+    ],
+
     'problem' => [
         'eyebrow' => 'Today',
         'title' => 'Delivery runs on phone calls. That costs you.',
@@ -349,6 +400,16 @@ return [
         'title' => 'The network has two doors. Take yours.',
         'body' => 'Both sides use the same system from opposite ends — one sends the orders, the other competes for them.',
 
+        'individual_title' => 'I want to send something',
+        'individual_body' => 'No shop and no paperwork. Say where from and where to, and the network finds you a rider.',
+        'individual_points' => [
+            'Order in your own name, no documents',
+            'The price is shown before you confirm',
+            'Whoever receives it follows a link',
+            'A handover code, so nobody else can take it',
+        ],
+        'individual_cta' => 'Register to send',
+        'individual_note' => 'The account works immediately.',
         'business_title' => 'I run a shop and need delivery',
         'business_body' => 'Order once and the network works the companies for you. No phone calls.',
         'business_points' => [
@@ -371,6 +432,16 @@ return [
         'company_cta' => 'Register your company',
         'company_note' => 'The platform reviews the account first. Until it is activated, no orders reach you.',
 
+        'rider_title' => 'I ride on my own',
+        'rider_body' => 'No company behind you? Register in your own name and orders reach you like any company on the network.',
+        'rider_points' => [
+            'You compete for orders beside the companies, on the same criteria',
+            'You set your own zones and your own hours',
+            'The delivery price is yours in full — the platform takes no share',
+            'Your rating is built on you, not on a company',
+        ],
+        'rider_cta' => 'Register as a rider',
+        'rider_note' => 'We need your ID card and a photo of you. The account activates after review.',
         'closer' => 'Not sure which you are? If you send orders you are a shop. If you carry them you are a company.',
     ],
 

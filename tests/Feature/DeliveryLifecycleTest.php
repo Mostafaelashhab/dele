@@ -16,6 +16,7 @@ use App\Domain\Orders\OrderData;
 use App\Domain\Proof\DeliveryConfirmationCode;
 use App\Domain\Shared\ValueObjects\LocationSnapshot;
 use App\Domain\Shared\ValueObjects\Money;
+use App\Domain\Tracking\TrackingPresenter;
 use App\Enums\AssignmentStatus;
 use App\Enums\DeliveryStatus;
 use App\Enums\EntryType;
@@ -279,6 +280,51 @@ class DeliveryLifecycleTest extends TestCase
         $this->assertNull($delivery->delivery_company_id);
         $this->assertFalse($delivery->status->isTerminal());
         $this->assertGreaterThanOrEqual(1, $delivery->dispatch_round);
+    }
+
+    #[Test]
+    public function a_rider_declining_is_not_reported_to_the_customer_as_an_assignment(): void
+    {
+        $order = $this->createOrder();
+
+        $delivery = app(AcceptDeliveryOfferAction::class)
+            ->handle($order->currentDelivery->refresh()->offers()->pending()->firstOrFail());
+
+        // The first rider is offered the job and turns it down.
+        $declining = Rider::factory()->for($this->company)->online()->create();
+
+        app(RespondToAssignmentAction::class)->reject(
+            app(AssignRiderAction::class)->handle($delivery, $declining),
+            'busy',
+        );
+
+        // A second rider takes it.
+        $delivery = app(RespondToAssignmentAction::class)->accept(
+            app(AssignRiderAction::class)->handle($delivery->fresh(), $this->rider),
+        );
+
+        $this->assertSame($this->rider->id, $delivery->rider_id);
+
+        // The decline is on the record for the operator...
+        $this->assertDatabaseHas('order_events', [
+            'delivery_id' => $delivery->id,
+            'type' => OrderEventType::RiderDeclined->value,
+            'is_customer_visible' => false,
+        ]);
+
+        // ...but the customer is told a rider was assigned exactly once, and
+        // only for the rider who actually took the job. Recording the decline
+        // as an assignment put a second, untrue entry on their timeline.
+        $timeline = app(TrackingPresenter::class)->present($delivery)['timeline'];
+        $types = array_column($timeline, 'type');
+
+        $this->assertSame([OrderEventType::RiderAssigned->value], array_values(array_filter(
+            $types,
+            fn (string $type): bool => in_array($type, [
+                OrderEventType::RiderAssigned->value,
+                OrderEventType::RiderDeclined->value,
+            ], true),
+        )));
     }
 
     #[Test]

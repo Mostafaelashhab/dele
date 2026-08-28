@@ -87,7 +87,12 @@ class LandingClaimsTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee(__('marketing.free.title'))
+            ->assertSee(__('marketing.free.title'));
+
+        // The subscription question moved to its own page when the landing
+        // was split up; the claim still has to be answered somewhere public.
+        $this->get(route('faq'))
+            ->assertOk()
             ->assertSee(__('marketing.faq.items.4.q'));
     }
 

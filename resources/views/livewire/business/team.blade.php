@@ -19,14 +19,14 @@
             <tbody>
                 @foreach ($this->members as $member)
                     <tr wire:key="{{ $member->id }}">
-                        <td class="font-medium text-ink-900">
+                        <td class="font-medium text-white">
                             {{ $member->user?->name }}
                             @if ($member->is_primary_contact)
                                 <x-ui.badge tone="blue" class="ms-1">{{ __('app.common.active') }}</x-ui.badge>
                             @endif
                         </td>
-                        <td class="text-ink-600" dir="ltr">{{ $member->user?->email }}</td>
-                        <td class="text-ink-700">{{ __('account.role.'.$member->role) }}</td>
+                        <td class="text-ink-300" dir="ltr">{{ $member->user?->email }}</td>
+                        <td class="text-ink-200">{{ __('account.role.'.$member->role) }}</td>
                         <td class="text-center">
                             <x-ui.badge :tone="$member->is_active ? 'green' : 'slate'" dot>
                                 {{ $member->is_active ? __('app.common.active') : __('app.common.inactive') }}
@@ -47,7 +47,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4"
              wire:click.self="$set('inviting', false)">
             <div class="w-full max-w-md rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.nav.team') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.nav.team') }}</h2>
                 <form wire:submit="save" class="mt-4 space-y-4">
                     <x-ui.field :label="__('app.common.name')" name="name" required>
                         <input type="text" wire:model="name" class="field-input">

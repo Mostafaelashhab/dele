@@ -4,24 +4,32 @@
 ])
 
 @php
+    /*
+     * Tinted glass rather than pale fills: a badge sits on a near-black panel
+     * now, where a 50-weight background is a bright blob.
+     *
+     * Indigo is gone. It was never in the theme — a stray Tailwind default
+     * that had become a status tone in two places — and a palette with an
+     * undocumented seventh hue in it is not a palette.
+     */
     $tones = [
-        'neutral' => 'bg-ink-100 text-ink-700 ring-ink-200',
-        'slate'   => 'bg-ink-100 text-ink-600 ring-ink-200',
-        'green'   => 'bg-emerald-50 text-emerald-800 ring-emerald-200',
-        'amber'   => 'bg-amber-50 text-amber-900 ring-amber-200',
-        'blue'    => 'bg-signal-50 text-signal-800 ring-signal-200',
-        'indigo'  => 'bg-indigo-50 text-indigo-800 ring-indigo-200',
-        'red'     => 'bg-red-50 text-red-800 ring-red-200',
+        'neutral' => 'bg-white/[0.06] text-ink-200 ring-white/15',
+        'slate'   => 'bg-white/[0.06] text-ink-300 ring-white/15',
+        'green'   => 'bg-emerald-500/12 text-emerald-300 ring-emerald-500/30',
+        'amber'   => 'bg-warn-500/12 text-warn-300 ring-warn-500/30',
+        'blue'    => 'bg-signal-500/12 text-signal-300 ring-signal-500/30',
+        'brand'   => 'bg-ember-500/12 text-ember-400 ring-ember-500/30',
+        'red'     => 'bg-red-500/12 text-red-300 ring-red-500/30',
     ];
 
     $dots = [
         'neutral' => 'bg-ink-400',
         'slate'   => 'bg-ink-400',
-        'green'   => 'bg-emerald-500',
-        'amber'   => 'bg-amber-500',
-        'blue'    => 'bg-signal-500',
-        'indigo'  => 'bg-indigo-500',
-        'red'     => 'bg-red-500',
+        'green'   => 'bg-emerald-400',
+        'amber'   => 'bg-warn-400',
+        'blue'    => 'bg-signal-400',
+        'brand'   => 'bg-ember-400',
+        'red'     => 'bg-red-400',
     ];
 @endphp
 

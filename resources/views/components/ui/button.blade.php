@@ -8,10 +8,13 @@
 
 @php
     $variants = [
-        'primary'   => 'bg-signal-600 text-white hover:bg-signal-700 focus-visible:outline-signal-600 shadow-xs',
-        'secondary' => 'bg-white text-ink-800 ring-1 ring-inset ring-ink-300 hover:bg-ink-50 shadow-xs',
-        'ghost'     => 'text-ink-600 hover:bg-ink-100 hover:text-ink-900',
-        'danger'    => 'bg-red-600 text-white hover:bg-red-700 shadow-xs',
+        // Primary is the brand colour now: the portals used signal blue while
+        // the marketing site used ember, so the same action wore two colours
+        // depending on which side of the login you were standing.
+        'primary'   => 'bg-ember-500 text-white hover:bg-ember-600 focus-visible:outline-ember-500 shadow-sm',
+        'secondary' => 'bg-white/5 text-white ring-1 ring-inset ring-white/15 hover:bg-white/10',
+        'ghost'     => 'text-ink-300 hover:bg-white/5 hover:text-white',
+        'danger'    => 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
         'success'   => 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs',
         'dark'      => 'bg-ink-900 text-white hover:bg-ink-800 shadow-xs',
     ];

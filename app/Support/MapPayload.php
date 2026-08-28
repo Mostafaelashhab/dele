@@ -4,7 +4,6 @@ namespace App\Support;
 
 use App\Domain\Shared\ValueObjects\GeoPoint;
 use App\Domain\Shared\ValueObjects\LocationSnapshot;
-use App\Enums\DeliveryStatus;
 use App\Models\Delivery;
 use App\Models\Rider;
 use App\Models\Zone;
@@ -119,7 +118,9 @@ class MapPayload
                     'lng' => $point->longitude,
                     'variant' => $late ? 'late' : 'dropoff',
                     'label' => '',
-                    'size' => 22,
+                    // A pin spends its lower third on the point, so it needs
+                    // more room than the dot this used to be.
+                    'size' => 30,
                     'title' => $delivery->order->number.' — '.$delivery->status->label(),
                     'popup' => self::deliveryPopup($delivery),
                     'url' => $routeName ? route($routeName, $delivery->order->number) : null,
@@ -209,63 +210,6 @@ class MapPayload
             ])
             ->values()
             ->all();
-    }
-
-    /**
-     * The customer's view of their own delivery.
-     *
-     * The rider's position is included only while they are actually carrying
-     * the parcel — the same rule the tracking presenter applies — so the map
-     * cannot become a way to watch a courier's day.
-     *
-     * @return array<string, mixed>
-     */
-    public static function forCustomer(Delivery $delivery): array
-    {
-        $order = $delivery->order;
-        $markers = [];
-
-        $dropoff = self::fromSnapshot(
-            $order->dropoffSnapshot(),
-            'dropoff',
-            'dropoff',
-            '',
-            __('app.tracking.eta'),
-        );
-
-        if ($dropoff !== null) {
-            $markers[] = $dropoff;
-        }
-
-        $visibleDuring = [
-            DeliveryStatus::PickedUp,
-            DeliveryStatus::InTransit,
-            DeliveryStatus::ArrivedAtDestination,
-        ];
-
-        if (in_array($delivery->status, $visibleDuring, true)) {
-            $riderPoint = $delivery->rider?->currentLocation();
-
-            if ($riderPoint !== null) {
-                $markers[] = [
-                    'key' => 'rider',
-                    'lat' => $riderPoint->latitude,
-                    'lng' => $riderPoint->longitude,
-                    'variant' => 'rider',
-                    'label' => '',
-                    'size' => 28,
-                    'pulse' => true,
-                    'title' => __('delivery.labels.rider'),
-                ];
-            }
-        }
-
-        return [
-            'markers' => $markers,
-            'route' => [],
-            'zones' => [],
-            'zoom' => 14,
-        ];
     }
 
     private static function deliveryPopup(Delivery $delivery): string

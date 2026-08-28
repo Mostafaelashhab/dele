@@ -14,7 +14,7 @@
                     <p class="truncate text-sm font-semibold text-ink-900">{{ $delivery->order->number }}</p>
                     <p class="mt-0.5 truncate text-xs text-ink-500">
                         {{ $delivery->order->dropoffSnapshot()->area }}
-                        · {{ $delivery->assigned_at?->translatedFormat('d M H:i') }}
+                        · {{ $delivery->assigned_at?->translatedFormat('d M g:i A') }}
                     </p>
                 </div>
                 <div class="shrink-0 text-end">

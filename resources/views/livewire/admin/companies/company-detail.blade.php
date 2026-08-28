@@ -33,21 +33,21 @@
 
     <div class="mt-5 grid gap-5 xl:grid-cols-3">
         <x-ui.card :title="__('app.nav.riders')" flush>
-            <ul class="max-h-72 divide-y divide-ink-100 overflow-y-auto">
+            <ul class="max-h-72 divide-y divide-white/5 overflow-y-auto">
                 @forelse ($company->riders as $rider)
                     <li class="flex items-center gap-2.5 px-4 py-2.5">
                         <span @class([
                             'size-2 shrink-0 rounded-full',
                             'bg-emerald-500' => $rider->status->value === 'online',
-                            'bg-amber-500' => $rider->status->value === 'busy',
+                            'bg-warn-500' => $rider->status->value === 'busy',
                             'bg-ink-300' => $rider->status->value === 'offline',
                             'bg-red-500' => $rider->status->value === 'suspended',
                         ])></span>
                         <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-medium text-ink-900">{{ $rider->name }}</p>
-                            <p class="text-2xs text-ink-500">{{ $rider->vehicle_type->label() }}</p>
+                            <p class="truncate text-sm font-medium text-white">{{ $rider->name }}</p>
+                            <p class="text-2xs text-ink-400">{{ $rider->vehicle_type->label() }}</p>
                         </div>
-                        <span class="tnum text-2xs text-ink-500">
+                        <span class="tnum text-2xs text-ink-400">
                             {{ $rider->completed_deliveries_count }}
                         </span>
                     </li>
@@ -62,24 +62,24 @@
                 @forelse ($company->serviceAreas as $zone)
                     <x-ui.badge tone="blue">{{ $zone->displayName() }}</x-ui.badge>
                 @empty
-                    <p class="text-sm text-ink-500">{{ __('app.common.all') }}</p>
+                    <p class="text-sm text-ink-400">{{ __('app.common.all') }}</p>
                 @endforelse
             </div>
 
-            <dl class="mt-4 space-y-2 border-t border-ink-100 pt-3 text-sm">
+            <dl class="mt-4 space-y-2 border-t border-white/5 pt-3 text-sm">
                 <div class="flex justify-between">
-                    <dt class="text-ink-500">{{ __('finance.category.commission') }}</dt>
-                    <dd class="tnum text-ink-800">
+                    <dt class="text-ink-400">{{ __('finance.category.commission') }}</dt>
+                    <dd class="tnum text-ink-100">
                         {{ number_format($company->commissionBasisPoints() / 100, 1) }}%
                     </dd>
                 </div>
                 <div class="flex justify-between">
-                    <dt class="text-ink-500">{{ __('finance.period.weekly') }}</dt>
-                    <dd class="text-ink-800">{{ $company->settlement_period->label() }}</dd>
+                    <dt class="text-ink-400">{{ __('finance.period.weekly') }}</dt>
+                    <dd class="text-ink-100">{{ $company->settlement_period->label() }}</dd>
                 </div>
                 <div class="flex justify-between">
-                    <dt class="text-ink-500">{{ __('rider.app.time_left') }}</dt>
-                    <dd class="tnum text-ink-800">{{ $company->offerTimeoutSeconds() }}s</dd>
+                    <dt class="text-ink-400">{{ __('rider.app.time_left') }}</dt>
+                    <dd class="tnum text-ink-100">{{ $company->offerTimeoutSeconds() }}s</dd>
                 </div>
             </dl>
         </x-ui.card>
@@ -89,11 +89,11 @@
                 <x-ui.empty icon="money" :title="__('app.common.none')"
                             :description="__('pricing.rule.base_fare')" />
             @else
-                <ul class="divide-y divide-ink-100">
+                <ul class="divide-y divide-white/5">
                     @foreach ($company->pricingRules as $rule)
                         <li class="flex items-center justify-between gap-3 px-4 py-2.5">
-                            <span class="truncate text-sm text-ink-800">{{ $rule->name }}</span>
-                            <span class="tnum shrink-0 text-xs text-ink-500">
+                            <span class="truncate text-sm text-ink-100">{{ $rule->name }}</span>
+                            <span class="tnum shrink-0 text-xs text-ink-400">
                                 {{ $rule->amount_minor?->format(false) ?? '—' }}
                             </span>
                         </li>
@@ -124,8 +124,8 @@
                                     {{ $delivery->order->number }}
                                 </a>
                             </td>
-                            <td class="text-ink-700">{{ $delivery->business->displayName() }}</td>
-                            <td class="text-ink-700">{{ $delivery->rider?->name ?? '—' }}</td>
+                            <td class="text-ink-200">{{ $delivery->business->displayName() }}</td>
+                            <td class="text-ink-200">{{ $delivery->rider?->name ?? '—' }}</td>
                             <td>
                                 <x-ui.badge :tone="$delivery->status->tone()" dot>
                                     {{ $delivery->status->label() }}

@@ -54,7 +54,7 @@
 
         <div class="min-w-0 flex-1">
             @if ($hint)
-                <p class="text-xs leading-relaxed text-ink-500">{{ $hint }}</p>
+                <p class="text-xs leading-relaxed text-ink-400">{{ $hint }}</p>
             @endif
 
             <div class="mt-1.5 flex items-center gap-2">

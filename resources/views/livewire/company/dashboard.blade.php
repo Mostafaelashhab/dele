@@ -17,14 +17,14 @@
          so no offer will reach it yet. Saying so is the difference between a
          dashboard that looks broken and one that is honestly waiting. --}}
     @if ($this->company()->status === \App\Enums\AccountStatus::Pending)
-        <div class="mb-3 flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4">
+        <div class="mb-3 flex items-start gap-3 rounded-xl border border-warn-500/35 bg-warn-500/10 p-4">
             <span class="flex size-9 shrink-0 items-center justify-center rounded-lg
-                         bg-amber-100 text-amber-700">
+                         bg-warn-500/15 text-warn-300">
                 <x-ui.icon name="clock" class="size-5" />
             </span>
             <div class="min-w-0">
-                <p class="text-sm font-bold text-amber-900">{{ __('app.auth.company_pending_title') }}</p>
-                <p class="mt-1 text-xs leading-relaxed text-amber-800">
+                <p class="text-sm font-bold text-warn-200">{{ __('app.auth.company_pending_title') }}</p>
+                <p class="mt-1 text-xs leading-relaxed text-warn-300">
                     {{ __('app.auth.company_pending_body') }}
                 </p>
             </div>
@@ -94,18 +94,25 @@
             </div>
         </x-ui.card>
 
-        <div class="grid grid-cols-2 gap-3">
-            <x-ui.stat :label="__('app.dashboard.busy_riders')" :value="$this->metrics['busy_riders']"
-                       icon="motorcycle" />
-            <x-ui.stat :label="__('finance.settlement.open')"
-                       :value="$this->metrics['unsettled']->format(false)"
-                       :href="route('company.settlements.index')" icon="receipt" tone="green" />
-        </div>
+        <x-ui.stat-row :items="[
+            [
+                'label' => __('app.dashboard.busy_riders'),
+                'value' => (string) $this->metrics['busy_riders'],
+                'icon' => 'motorcycle',
+            ],
+            [
+                'label' => __('finance.settlement.open'),
+                'value' => $this->metrics['unsettled']->format(false),
+                'icon' => 'receipt',
+                'tone' => 'green',
+            ],
+        ]" />
     </div>
 
     {{-- The fleet, plotted. A dispatcher deciding who to send needs to see
          where everyone already is, not read it out of a column. --}}
     <x-ui.map
+                style="dark"
         class="mt-4"
         :id="\App\Livewire\Company\Dashboard::MAP_ID"
         :markers="$this->mapConfig['markers']"
@@ -144,10 +151,10 @@
                                            wire:navigate class="font-medium text-signal-700 hover:underline">
                                             {{ $delivery->order->number }}
                                         </a>
-                                        <p class="text-2xs text-ink-500">{{ $delivery->business->displayName() }}</p>
+                                        <p class="text-2xs text-ink-400">{{ $delivery->business->displayName() }}</p>
                                     </td>
-                                    <td class="text-ink-700">{{ $delivery->order->dropoffSnapshot()->area ?? '—' }}</td>
-                                    <td class="text-ink-700">
+                                    <td class="text-ink-200">{{ $delivery->order->dropoffSnapshot()->area ?? '—' }}</td>
+                                    <td class="text-ink-200">
                                         {{ $delivery->rider?->name ?? __('app.common.unassigned') }}
                                     </td>
                                     <td>
@@ -171,7 +178,7 @@
                 </x-ui.button>
             </x-slot:actions>
 
-            <ul class="divide-y divide-ink-100">
+            <ul class="divide-y divide-white/5">
                 @forelse ($this->riders as $rider)
                     <li class="flex items-center gap-3 px-4 py-2.5">
                         <span class="relative shrink-0">
@@ -183,13 +190,13 @@
                             <span @class([
                                 'absolute -bottom-0.5 size-2.5 rounded-full ring-2 ring-white ltr:-right-0.5 rtl:-left-0.5',
                                 'bg-emerald-500' => $rider->status->value === 'online',
-                                'bg-amber-500' => $rider->status->value === 'busy',
+                                'bg-warn-500' => $rider->status->value === 'busy',
                                 'bg-ink-300' => $rider->status->value === 'offline',
                             ])></span>
                         </span>
                         <div class="min-w-0 flex-1">
-                            <p class="truncate text-sm font-medium text-ink-900">{{ $rider->name }}</p>
-                            <p class="flex items-center gap-1 text-2xs text-ink-500">
+                            <p class="truncate text-sm font-medium text-white">{{ $rider->name }}</p>
+                            <p class="flex items-center gap-1 text-2xs text-ink-400">
                                 <x-ui.icon :name="match ($rider->vehicle_type->value) {
                                     'car' => 'car', 'van' => 'van',
                                     'bicycle' => 'bicycle', 'on_foot' => 'walk',
@@ -198,7 +205,7 @@
                                 {{ $rider->vehicle_type->label() }}
                             </p>
                         </div>
-                        <span class="tnum text-xs text-ink-500">
+                        <span class="tnum text-xs text-ink-400">
                             {{ $rider->active_deliveries_count }}/{{ $rider->max_concurrent_deliveries }}
                         </span>
                     </li>

@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\IdentityDocumentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterBusinessController;
 use App\Http\Controllers\Auth\RegisterCompanyController;
-use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\Auth\RegisterRiderController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\LearnController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Rider\LocationController;
 use App\Http\Controllers\Rider\ManifestController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TrackingLookupController;
 use App\Livewire;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +43,16 @@ Route::post('/track', TrackingLookupController::class)
 |--------------------------------------------------------------------------
 */
 
+/*
+ * The manual. Split by role because a shop owner reading about rider identity
+ * checks is reading somebody else's instructions.
+ */
+Route::get('/learn', [LearnController::class, 'index'])->name('learn');
+Route::get('/learn/{audience}', [LearnController::class, 'show'])->name('learn.show');
+
+Route::view('/coverage', 'public.coverage')->name('coverage');
+Route::view('/faq', 'public.faq')->name('faq');
+
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::middleware('guest')->group(function (): void {
@@ -60,10 +73,29 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/register/business', [RegisterBusinessController::class, 'store'])
         ->middleware('throttle:6,1');
 
+    /*
+     * Somebody sending their own parcel. The same controller and the same
+     * pipeline as a shop — an individual is a business of one — with the
+     * shop-only questions dropped.
+     */
+    Route::get('/register/individual', [RegisterBusinessController::class, 'create'])
+        ->name('register.individual');
+    Route::post('/register/individual', [RegisterBusinessController::class, 'store'])
+        ->middleware('throttle:6,1');
+
     Route::get('/register/company', [RegisterCompanyController::class, 'create'])
         ->name('register.company');
     Route::post('/register/company', [RegisterCompanyController::class, 'store'])
         ->middleware('throttle:6,1');
+
+    /*
+     * A rider with no company behind them. Throttled harder than the other
+     * doors because it accepts file uploads.
+     */
+    Route::get('/register/rider', [RegisterRiderController::class, 'create'])
+        ->name('register.rider');
+    Route::post('/register/rider', [RegisterRiderController::class, 'store'])
+        ->middleware('throttle:4,1');
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])
@@ -79,6 +111,16 @@ Route::post('/logout', [LoginController::class, 'destroy'])
 Route::middleware(['auth', 'platform.staff'])->prefix('admin')->name('admin.')->group(function (): void {
     Route::get('/', Livewire\Admin\Dashboard::class)->name('dashboard');
     Route::get('/live', Livewire\Admin\LiveOperations::class)->name('live');
+
+    /*
+     * Accounts that registered themselves and are waiting on a human, and the
+     * only way to read a rider's identity documents. The documents have no
+     * URL of their own; this route is behind platform-staff middleware and
+     * every viewing is written to the audit log.
+     */
+    Route::get('/review', Livewire\Admin\ReviewQueue::class)->name('review');
+    Route::get('/review/{rider}/{document}', IdentityDocumentController::class)
+        ->name('identity.document');
 
     Route::get('/orders', Livewire\Admin\Orders\OrderList::class)->name('orders.index');
     Route::get('/orders/{number}', Livewire\Admin\Orders\OrderDetail::class)->name('orders.show');

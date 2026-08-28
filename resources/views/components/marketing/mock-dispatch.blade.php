@@ -75,7 +75,7 @@
             <p class="text-[10px] font-semibold text-ink-700">التوصيلات الجارية</p>
         </div>
         @foreach ([
-            ['no' => 'BN‑4821', 'rider' => 'محمد إبراهيم', 'state' => 'في الطريق', 'tone' => 'indigo'],
+            ['no' => 'BN‑4821', 'rider' => 'محمد إبراهيم', 'state' => 'في الطريق', 'tone' => 'blue'],
             ['no' => 'BN‑4819', 'rider' => 'أحمد سمير', 'state' => 'تم الاستلام', 'tone' => 'blue'],
             ['no' => 'BN‑4816', 'rider' => 'مصطفى جمال', 'state' => 'تم التسليم', 'tone' => 'green'],
         ] as $row)
@@ -85,7 +85,7 @@
                 <span class="truncate text-[10px] text-ink-500">{{ $row['rider'] }}</span>
                 <span @class([
                     'ms-auto shrink-0 rounded px-1.5 py-0.5 text-[9px] font-semibold',
-                    'bg-indigo-50 text-indigo-800' => $row['tone'] === 'indigo',
+                    'bg-signal-50 text-signal-800' => $row['tone'] === 'blue',
                     'bg-signal-50 text-signal-800' => $row['tone'] === 'blue',
                     'bg-emerald-50 text-emerald-800' => $row['tone'] === 'green',
                 ])>{{ $row['state'] }}</span>

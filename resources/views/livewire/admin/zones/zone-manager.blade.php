@@ -8,6 +8,7 @@
     {{-- Coverage, drawn. Overlaps and gaps are visible here and nowhere
          else; clicking places the centre of the zone being edited. --}}
     <x-ui.map
+                style="dark"
         class="mb-4"
         :id="\App\Livewire\Admin\Zones\ZoneManager::MAP_ID"
         :zones="$this->mapConfig['zones']"
@@ -36,10 +37,10 @@
                     @foreach ($this->zones as $zone)
                         <tr wire:key="{{ $zone->id }}">
                             <td>
-                                <p class="font-medium text-ink-900">{{ $zone->name_ar }}</p>
-                                <p class="text-2xs text-ink-500">{{ $zone->name }} · {{ $zone->code }}</p>
+                                <p class="font-medium text-white">{{ $zone->name_ar }}</p>
+                                <p class="text-2xs text-ink-400">{{ $zone->name }} · {{ $zone->code }}</p>
                             </td>
-                            <td class="tnum font-mono text-2xs text-ink-500" dir="ltr">
+                            <td class="tnum font-mono text-2xs text-ink-400" dir="ltr">
                                 {{ number_format($zone->centroid_latitude, 4) }},
                                 {{ number_format($zone->centroid_longitude, 4) }}
                                 · {{ $zone->radius_meters }}m
@@ -70,7 +71,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/50 p-4"
              wire:click.self="$set('editing', false)">
             <div class="w-full max-w-xl rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.nav.zones') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.nav.zones') }}</h2>
                 <form wire:submit="save" class="mt-4 grid gap-4 sm:grid-cols-2">
                     <x-ui.field :label="__('form.zone_name_en')" name="name" required>
                         <input type="text" wire:model="name" class="field-input" dir="ltr">
@@ -105,9 +106,9 @@
                     <x-ui.field :label="__('form.zone_eta')" name="estimatedMinutes">
                         <input type="number" min="1" wire:model="estimatedMinutes" class="field-input tnum">
                     </x-ui.field>
-                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-700">
+                    <label class="flex items-center gap-2 self-end pb-2 text-sm text-ink-200">
                         <input type="checkbox" wire:model="active"
-                               class="size-4 rounded border-ink-300 text-signal-600">
+                               class="size-4 rounded border-white/15 text-signal-600">
                         {{ __('app.common.active') }}
                     </label>
                     <div class="flex gap-2 sm:col-span-2">

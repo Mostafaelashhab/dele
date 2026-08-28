@@ -51,12 +51,12 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="inline-flex items-center gap-1.5 text-ink-600">
+                                    <span class="inline-flex items-center gap-1.5 text-ink-300">
                                         <x-ui.icon :name="$business->categoryIcon()" class="size-3.5 text-ink-400" />
                                         {{ $business->categoryLabel() }}
                                     </span>
                                 </td>
-                                <td class="tnum text-ink-600" dir="ltr">{{ $business->phone }}</td>
+                                <td class="tnum text-ink-300" dir="ltr">{{ $business->phone }}</td>
                                 <td class="tnum text-end">{{ $business->deliveries_count }}</td>
                                 <td>
                                     <x-ui.badge :tone="$business->status->tone()" dot>
@@ -78,7 +78,7 @@
                 </table>
             </div>
             @if ($businesses->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $businesses->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $businesses->links() }}</div>
             @endif
         @endif
     </x-ui.card>

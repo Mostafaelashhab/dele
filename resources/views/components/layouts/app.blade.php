@@ -21,7 +21,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="min-h-dvh">
+{{-- One ground for the whole product: the portals used to be a light theme
+     behind a dark marketing site, so signing in felt like a different app. --}}
+<body class="min-h-dvh bg-ink-950">
 <div x-data="{ mobileNav: false }" class="lg:flex lg:min-h-dvh">
 
     {{-- Mobile navigation backdrop --}}
@@ -37,13 +39,11 @@
          desktop sidebar was never visible in either direction. Confining the
          transform to below `lg` means there is nothing left to cancel. --}}
     <aside :class="mobileNav ? '' : 'max-lg:ltr:-translate-x-full max-lg:rtl:translate-x-full'"
-           class="fixed inset-y-0 z-40 flex w-64 shrink-0 flex-col bg-ink-950 transition-transform
+           class="fixed inset-y-0 z-40 flex w-64 shrink-0 flex-col border-e border-white/10 bg-ink-900/60 transition-transform
                   lg:static ltr:left-0 rtl:right-0">
 
         <div class="flex h-14 items-center gap-2.5 border-b border-white/10 px-4">
-            <span class="flex size-7 items-center justify-center rounded bg-signal-500 text-white">
-                <x-ui.icon name="truck" class="size-4" />
-            </span>
+            <x-ui.logo class="text-white" />
             <div class="min-w-0 leading-tight">
                 <p class="truncate text-sm font-semibold text-white">{{ __('app.name') }}</p>
                 <p class="truncate text-2xs text-ink-400">{{ $context ?? ucfirst($portal) }}</p>
@@ -71,7 +71,7 @@
                                 <a href="{{ route($item['route']) }}" wire:navigate
                                    @class([
                                        'flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium transition',
-                                       'bg-signal-600 text-white' => $isActive,
+                                       'bg-ember-500 text-white shadow-sm' => $isActive,
                                        'text-ink-300 hover:bg-white/5 hover:text-white' => ! $isActive,
                                    ])
                                    @if ($isActive) aria-current="page" @endif>
@@ -107,10 +107,10 @@
     </aside>
 
     <div class="flex min-w-0 flex-1 flex-col">
-        <header class="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-ink-200 bg-white/95 px-4
-                       backdrop-blur supports-backdrop-filter:bg-white/80">
+        <header class="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-white/10
+                       bg-ink-950/85 px-4 backdrop-blur">
             <button type="button" @click="mobileNav = true"
-                    class="-ms-1 rounded-md p-1.5 text-ink-600 hover:bg-ink-100 lg:hidden"
+                    class="-ms-1 rounded-md p-1.5 text-ink-300 hover:bg-white/5 lg:hidden"
                     aria-label="{{ __('app.nav.dashboard') }}">
                 <x-ui.icon name="menu" class="size-5" />
             </button>
@@ -124,28 +124,34 @@
             <livewire:shared.notification-bell />
 
             <a href="{{ route('locale.switch', ['locale' => $locale === 'ar' ? 'en' : 'ar']) }}"
-               class="rounded-md px-2 py-1 text-xs font-semibold text-ink-600 ring-1 ring-inset ring-ink-300
-                      transition hover:bg-ink-50">
+               class="rounded-md px-2 py-1 text-xs font-semibold text-ink-300 ring-1 ring-inset ring-white/15
+                      transition hover:bg-white/5">
                 {{ $locale === 'ar' ? 'EN' : 'ع' }}
             </a>
         </header>
 
         <main class="flex-1 p-4 lg:p-6">
+            {{-- Content is capped: a data table stretched across an ultrawide
+                 monitor is unreadable, and the eye loses the row it is on. --}}
+            <div class="mx-auto max-w-[92rem]">
             @if (session('status'))
-                <div class="mb-4 flex items-start gap-2.5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3">
-                    <x-ui.icon name="check" class="mt-0.5 size-4 shrink-0 text-emerald-600" />
-                    <p class="text-sm text-emerald-900">{{ session('status') }}</p>
+                <div class="mb-4 flex items-start gap-2.5 rounded-lg border border-emerald-500/30
+                            bg-emerald-500/10 px-4 py-3">
+                    <x-ui.icon name="check" class="mt-0.5 size-4 shrink-0 text-emerald-400" />
+                    <p class="text-sm text-emerald-200">{{ session('status') }}</p>
                 </div>
             @endif
 
             @if (session('error'))
-                <div class="mb-4 flex items-start gap-2.5 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-                    <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-red-600" />
-                    <p class="text-sm text-red-900">{{ session('error') }}</p>
+                <div class="mb-4 flex items-start gap-2.5 rounded-lg border border-red-500/30
+                            bg-red-500/10 px-4 py-3">
+                    <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-red-400" />
+                    <p class="text-sm text-red-200">{{ session('error') }}</p>
                 </div>
             @endif
 
             {{ $slot }}
+            </div>
         </main>
     </div>
 </div>

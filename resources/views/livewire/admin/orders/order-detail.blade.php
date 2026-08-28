@@ -27,21 +27,30 @@
 
     <div class="grid gap-5 xl:grid-cols-3">
         <div class="space-y-5 xl:col-span-2">
+
+            @php $liveDelivery = $this->attempts->last(); @endphp
+
+            @if ($liveDelivery)
+                <livewire:shared.delivery-issues :delivery-id="$liveDelivery->id"
+                                                 :key="'issues-'.$liveDelivery->id" />
+            @endif
+
             <div class="grid gap-4 sm:grid-cols-2">
                 <x-ui.card :title="__('delivery.labels.pickup')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $order->pickupSnapshot()->contactName }}</p>
-                    <p class="mt-1 text-sm text-ink-600">{{ $order->pickupSnapshot()->fullAddress() }}</p>
-                    <p class="tnum mt-1 text-sm text-ink-500" dir="ltr">{{ $order->pickupSnapshot()->contactPhone }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $order->pickupSnapshot()->contactName }}</p>
+                    <p class="mt-1 text-sm text-ink-300">{{ $order->pickupSnapshot()->fullAddress() }}</p>
+                    <p class="tnum mt-1 text-sm text-ink-400" dir="ltr">{{ $order->pickupSnapshot()->contactPhone }}</p>
                 </x-ui.card>
                 <x-ui.card :title="__('delivery.labels.customer')">
-                    <p class="text-sm font-semibold text-ink-900">{{ $order->dropoffSnapshot()->contactName }}</p>
-                    <p class="mt-1 text-sm text-ink-600">{{ $order->dropoffSnapshot()->fullAddress() }}</p>
-                    <p class="tnum mt-1 text-sm text-ink-500" dir="ltr">{{ $order->dropoffSnapshot()->contactPhone }}</p>
+                    <p class="text-sm font-semibold text-white">{{ $order->dropoffSnapshot()->contactName }}</p>
+                    <p class="mt-1 text-sm text-ink-300">{{ $order->dropoffSnapshot()->fullAddress() }}</p>
+                    <p class="tnum mt-1 text-sm text-ink-400" dir="ltr">{{ $order->dropoffSnapshot()->contactPhone }}</p>
                 </x-ui.card>
             </div>
 
             @if ($this->hasMap())
                 <x-ui.map
+                style="dark"
                     :id="\App\Livewire\Admin\Orders\OrderDetail::MAP_ID"
                     :markers="$this->mapConfig['markers']"
                     :route="$this->mapConfig['route']"
@@ -72,7 +81,7 @@
                                 @foreach ($attempt->offers->sortBy(['round', 'rank']) as $offer)
                                     <tr>
                                         <td class="tnum text-ink-400">{{ $offer->round }}.{{ $offer->rank }}</td>
-                                        <td class="font-medium text-ink-900">
+                                        <td class="font-medium text-white">
                                             {{ $offer->deliveryCompany->displayName() }}
                                         </td>
                                         <td class="tnum text-end">{{ number_format($offer->score() * 100, 1) }}%</td>
@@ -98,13 +107,13 @@
             @endforeach
 
             <x-ui.card :title="__('delivery.labels.timeline')" flush>
-                <ol class="divide-y divide-ink-100">
+                <ol class="divide-y divide-white/5">
                     @foreach ($this->timeline as $event)
                         <li class="flex items-start gap-3 px-4 py-2.5">
                             <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-ink-300"></span>
                             <div class="min-w-0 flex-1">
-                                <p class="text-sm text-ink-800">{{ $event->type->label() }}</p>
-                                <p class="text-2xs text-ink-500">
+                                <p class="text-sm text-ink-100">{{ $event->type->label() }}</p>
+                                <p class="text-2xs text-ink-400">
                                     {{ $event->actor_label ?? $event->actor_type }}
                                     @if ($event->from_status && $event->to_status && $event->from_status !== $event->to_status)
                                         · {{ $event->from_status->label() }} → {{ $event->to_status->label() }}
@@ -112,7 +121,7 @@
                                 </p>
                             </div>
                             <span class="tnum shrink-0 text-2xs text-ink-400">
-                                {{ $event->occurred_at->translatedFormat('d M H:i:s') }}
+                                {{ $event->occurred_at->translatedFormat('d M g:i:s A') }}
                             </span>
                         </li>
                     @endforeach
@@ -123,30 +132,30 @@
         <div class="space-y-5">
             @if ($current)
                 <x-ui.card :title="__('delivery.labels.price')">
-                    <p class="tnum text-2xl font-bold text-ink-900">{{ $current->price()->format() }}</p>
-                    <dl class="mt-3 space-y-1.5 border-t border-ink-100 pt-3 text-xs">
+                    <p class="tnum text-2xl font-bold text-white">{{ $current->price()->format() }}</p>
+                    <dl class="mt-3 space-y-1.5 border-t border-white/5 pt-3 text-xs">
                         <div class="flex justify-between">
-                            <dt class="text-ink-500">{{ __('finance.category.platform_fee') }}</dt>
+                            <dt class="text-ink-400">{{ __('finance.category.platform_fee') }}</dt>
                             <dd class="tnum font-medium text-emerald-700">
                                 {{ $current->platformFee()->format(false) }}
                             </dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-ink-500">{{ __('finance.category.company_payout') }}</dt>
-                            <dd class="tnum text-ink-800">{{ $current->companyPayout()->format(false) }}</dd>
+                            <dt class="text-ink-400">{{ __('finance.category.company_payout') }}</dt>
+                            <dd class="tnum text-ink-100">{{ $current->companyPayout()->format(false) }}</dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-ink-500">{{ __('finance.category.rider_payout') }}</dt>
-                            <dd class="tnum text-ink-800">{{ $current->riderPayout()->format(false) }}</dd>
+                            <dt class="text-ink-400">{{ __('finance.category.rider_payout') }}</dt>
+                            <dd class="tnum text-ink-100">{{ $current->riderPayout()->format(false) }}</dd>
                         </div>
                     </dl>
 
-                    <dl class="mt-3 space-y-1.5 border-t border-ink-100 pt-3 text-xs">
+                    <dl class="mt-3 space-y-1.5 border-t border-white/5 pt-3 text-xs">
                         @foreach (($current->price_breakdown['lines'] ?? []) as $line)
                             @continue(($line['amount_minor'] ?? 0) === 0)
                             <div class="flex justify-between gap-3">
-                                <dt class="text-ink-500">{{ $line['label'] }}</dt>
-                                <dd class="tnum shrink-0 text-ink-700">
+                                <dt class="text-ink-400">{{ $line['label'] }}</dt>
+                                <dd class="tnum shrink-0 text-ink-200">
                                     {{ number_format($line['amount_minor'] / 100, 2) }}
                                 </dd>
                             </div>
@@ -162,7 +171,7 @@
                             <tbody>
                                 @foreach ($this->transactions as $entry)
                                     <tr>
-                                        <td class="text-xs text-ink-600">
+                                        <td class="text-xs text-ink-300">
                                             {{ $entry->account_type->label() }}
                                             <p class="text-2xs text-ink-400">{{ $entry->category->label() }}</p>
                                         </td>
@@ -196,7 +205,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4"
              wire:click.self="$set('cancelling', false)">
             <div class="w-full max-w-sm rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.common.cancel') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.common.cancel') }}</h2>
                 <form wire:submit="cancel" class="mt-4 space-y-3">
                     <x-ui.field :label="__('app.common.reason')" name="cancellationReason" required>
                         <input type="text" wire:model="cancellationReason" class="field-input" autofocus>

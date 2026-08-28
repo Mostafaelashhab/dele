@@ -17,16 +17,16 @@
                 <x-ui.card wire:key="{{ $address->id }}">
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
-                            <p class="truncate text-sm font-semibold text-ink-900">{{ $address->label }}</p>
-                            <p class="mt-1 text-xs leading-relaxed text-ink-600">{{ $address->composedLine() }}</p>
-                            <p class="mt-1 text-xs text-ink-500">{{ $address->zone?->displayName() }}</p>
-                            <p class="tnum mt-1 text-xs text-ink-500" dir="ltr">{{ $address->contact_phone }}</p>
+                            <p class="truncate text-sm font-semibold text-white">{{ $address->label }}</p>
+                            <p class="mt-1 text-xs leading-relaxed text-ink-300">{{ $address->composedLine() }}</p>
+                            <p class="mt-1 text-xs text-ink-400">{{ $address->zone?->displayName() }}</p>
+                            <p class="tnum mt-1 text-xs text-ink-400" dir="ltr">{{ $address->contact_phone }}</p>
                         </div>
                         @if ($address->is_default)
                             <x-ui.badge tone="blue">{{ __('app.common.active') }}</x-ui.badge>
                         @endif
                     </div>
-                    <div class="mt-3 flex gap-1 border-t border-ink-100 pt-3">
+                    <div class="mt-3 flex gap-1 border-t border-white/5 pt-3">
                         <x-ui.button variant="ghost" size="sm" wire:click="edit('{{ $address->id }}')">
                             {{ __('app.common.edit') }}
                         </x-ui.button>
@@ -45,7 +45,7 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/50 p-4"
              wire:click.self="$set('editing', false)">
             <div class="w-full max-w-lg rounded-card bg-white p-5 shadow-xl">
-                <h2 class="text-sm font-semibold text-ink-900">{{ __('app.nav.addresses') }}</h2>
+                <h2 class="text-sm font-semibold text-white">{{ __('app.nav.addresses') }}</h2>
                 <form wire:submit="save" class="mt-4 grid gap-4 sm:grid-cols-2">
                     <x-ui.field :label="__('address.label')" name="label" required>
                         <input type="text" wire:model="label" class="field-input">
@@ -70,9 +70,9 @@
                     <x-ui.field :label="__('address.landmark')" name="landmark" class="sm:col-span-2">
                         <input type="text" wire:model="landmark" class="field-input">
                     </x-ui.field>
-                    <label class="flex items-center gap-2 text-sm text-ink-700 sm:col-span-2">
+                    <label class="flex items-center gap-2 text-sm text-ink-200 sm:col-span-2">
                         <input type="checkbox" wire:model="isDefault"
-                               class="size-4 rounded border-ink-300 text-signal-600">
+                               class="size-4 rounded border-white/15 text-signal-600">
                         {{ __('app.common.active') }}
                     </label>
                     <div class="flex gap-2 sm:col-span-2">

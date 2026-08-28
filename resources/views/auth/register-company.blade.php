@@ -114,8 +114,8 @@
             </div>
         </x-ui.fieldset>
 
-        <p class="flex items-start gap-2.5 rounded-lg border border-amber-200 bg-amber-50 p-3.5
-                  text-xs leading-relaxed text-amber-900">
+        <p class="flex items-start gap-2.5 rounded-lg border border-warn-200 bg-warn-50 p-3.5
+                  text-xs leading-relaxed text-warn-900">
             <x-ui.icon name="shield" class="mt-0.5 size-4 shrink-0" />
             {{ __('marketing.choose.company_note') }}
         </p>

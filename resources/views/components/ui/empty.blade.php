@@ -25,10 +25,10 @@
 ]) }}>
     <x-ui.illustration :name="$drawing" :class="$compact ? 'h-20' : 'h-28'" />
 
-    <p class="mt-4 text-sm font-semibold text-ink-800">{{ $title ?? __('app.common.empty') }}</p>
+    <p class="mt-4 text-sm font-semibold text-ink-100">{{ $title ?? __('app.common.empty') }}</p>
 
     @if ($description)
-        <p class="mt-1.5 max-w-sm text-xs leading-relaxed text-ink-500">{{ $description }}</p>
+        <p class="mt-1.5 max-w-sm text-xs leading-relaxed text-ink-400">{{ $description }}</p>
     @endif
 
     @if (trim($slot) !== '')

@@ -13,7 +13,7 @@ return [
     // Orders
     'saved_address' => 'اختر عنوانًا محفوظًا',
     'reference' => 'رقمك المرجعي',
-    'reference_hint' => 'رقم الطلب في نظامك أنت، عشان تلاقيه بسهولة بعدين',
+    'reference_hint' => 'رقم الطلب في نظامك الخاص، ليسهل الرجوع إليه لاحقًا',
     'order_notes' => 'ملاحظات للمندوب',
     'order_items' => 'محتويات الطلب',
     'priority' => 'أولوية التوصيل',
@@ -59,7 +59,7 @@ return [
 
     // Matching & dispatch
     'matching_strategy' => 'طريقة اختيار شركة التوصيل',
-    'matching_strategy_hint' => 'إزاي ترتّب المنصة الشركات قبل ما تعرض عليها',
+    'matching_strategy_hint' => 'كيف ترتّب المنصة الشركات قبل عرض الطلب عليها',
     'matching_balanced' => 'متوازن (الأفضل إجمالًا)',
     'matching_cheapest' => 'الأرخص سعرًا',
     'matching_fastest' => 'الأسرع وصولًا',
@@ -100,7 +100,7 @@ return [
     'api_client_name_hint' => 'يساعدك تعرف كل مفتاح بيخدم إيه',
     'webhook_url' => 'رابط استقبال الأحداث',
     'webhook_events' => 'الأحداث المطلوب إرسالها',
-    'webhook_secret_notice' => 'انسخ المفتاح دلوقتي — مش هيظهر تاني',
+    'webhook_secret_notice' => 'انسخ المفتاح الآن — لن يظهر مرة أخرى',
 
     // Proof of delivery
     'proof_primary' => 'صورة إثبات التسليم',

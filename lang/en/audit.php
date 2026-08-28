@@ -19,6 +19,10 @@ return [
         'api_key_revoked' => 'API key revoked',
         'logged_in' => 'Signed in',
         'login_failed' => 'Failed sign-in',
+        'identity_viewed' => 'Identity document viewed',
+        'identity_verified' => 'Identity verified',
+        'identity_rejected' => 'Identity rejected',
+        'account_approved' => 'Account approved',
     ],
 
     'description' => [

@@ -61,8 +61,8 @@
                     <tbody>
                         @foreach ($this->entries as $entry)
                             <tr>
-                                <td class="text-ink-700">{{ $entry->delivery?->order?->number ?? '—' }}</td>
-                                <td class="text-ink-600">{{ $entry->category->label() }}</td>
+                                <td class="text-ink-200">{{ $entry->delivery?->order?->number ?? '—' }}</td>
+                                <td class="text-ink-300">{{ $entry->category->label() }}</td>
                                 <td @class([
                                     'tnum text-end font-medium',
                                     'text-emerald-700' => $entry->entry_type->value === 'credit',

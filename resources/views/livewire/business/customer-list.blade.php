@@ -25,10 +25,10 @@
                     <tbody>
                         @foreach ($customers as $customer)
                             <tr wire:key="{{ $customer->id }}">
-                                <td class="font-medium text-ink-900">{{ $customer->name }}</td>
-                                <td class="tnum text-ink-600" dir="ltr">{{ $customer->phone }}</td>
+                                <td class="font-medium text-white">{{ $customer->name }}</td>
+                                <td class="tnum text-ink-300" dir="ltr">{{ $customer->phone }}</td>
                                 <td class="tnum text-end">{{ $customer->orders_count }}</td>
-                                <td class="tnum text-end text-ink-500">
+                                <td class="tnum text-end text-ink-400">
                                     {{ $customer->last_ordered_at?->diffForHumans() ?? __('app.common.never') }}
                                 </td>
                             </tr>
@@ -37,7 +37,7 @@
                 </table>
             </div>
             @if ($customers->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $customers->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $customers->links() }}</div>
             @endif
         @endif
     </x-ui.card>

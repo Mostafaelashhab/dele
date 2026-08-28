@@ -52,6 +52,63 @@ trait HasMedia
         return $path;
     }
 
+    /**
+     * The disk for anything that must never be reachable by URL.
+     *
+     * The ordinary media disk is public — a shop logo and a proof photo are
+     * meant to be linkable. An identity document is not: a national ID card
+     * sitting on a public disk is fetchable by anyone who guesses the path,
+     * with no login and no log. These go on the private disk and are served
+     * only through an authorised controller.
+     */
+    protected static function privateMediaDisk(): string
+    {
+        return (string) config('platform.media.private_disk', 'local');
+    }
+
+    /**
+     * Store a document privately, replacing whatever was there before.
+     */
+    public function storePrivateMedia(string $attribute, UploadedFile $file, string $folder): string
+    {
+        $previous = $this->getAttribute($attribute);
+
+        $path = $file->store($folder.'/'.$this->getKey(), self::privateMediaDisk());
+
+        $this->forceFill([$attribute => $path])->save();
+
+        if (filled($previous) && $previous !== $path) {
+            Storage::disk(self::privateMediaDisk())->delete($previous);
+        }
+
+        return $path;
+    }
+
+    /**
+     * The bytes of a private document, for a caller that has already checked
+     * it is allowed to see them. Deliberately returns contents rather than a
+     * URL: there is no URL, and there should not be one.
+     */
+    public function privateMediaContents(string $attribute): ?string
+    {
+        $path = $this->getAttribute($attribute);
+
+        if (blank($path)) {
+            return null;
+        }
+
+        $disk = Storage::disk(self::privateMediaDisk());
+
+        return $disk->exists($path) ? $disk->get($path) : null;
+    }
+
+    public function hasPrivateMedia(string $attribute): bool
+    {
+        $path = $this->getAttribute($attribute);
+
+        return filled($path) && Storage::disk(self::privateMediaDisk())->exists($path);
+    }
+
     public function clearMedia(string $attribute): void
     {
         $path = $this->getAttribute($attribute);

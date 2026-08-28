@@ -24,8 +24,8 @@
                     <button type="button" wire:click="$set('days', '{{ $value }}')"
                             @class([
                                 'tnum rounded px-3 py-1.5 text-xs font-semibold transition',
-                                'bg-white text-ink-900 shadow-xs' => $days === $value,
-                                'text-ink-600' => $days !== $value,
+                                'bg-white text-white shadow-xs' => $days === $value,
+                                'text-ink-300' => $days !== $value,
                             ])>{{ $label }}</button>
                 @endforeach
             </div>
@@ -38,26 +38,26 @@
          wondering why. --}}
     @if (($this->overview['pending_companies'] ?? 0) > 0)
         <a href="{{ route('admin.companies.index') }}" wire:navigate
-           class="mb-4 flex items-center gap-4 rounded-xl border border-amber-300 bg-amber-50 p-4
-                  transition hover:border-amber-400 hover:bg-amber-100">
+           class="mb-4 flex items-center gap-4 rounded-xl border border-warn-500/35 bg-warn-500/10 p-4
+                  transition hover:border-warn-500/50 hover:bg-warn-500/15">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-lg
-                         bg-amber-500 text-white">
+                         bg-warn-500 text-white">
                 <x-ui.icon name="truck" class="size-5" />
             </span>
             <span class="min-w-0 flex-1">
                 <span class="flex items-baseline gap-2">
-                    <span class="tnum text-xl font-bold text-amber-900">
+                    <span class="tnum text-xl font-bold text-warn-200">
                         {{ $this->overview['pending_companies'] }}
                     </span>
-                    <span class="text-sm font-bold text-amber-900">
+                    <span class="text-sm font-bold text-warn-200">
                         {{ __('app.dashboard.pending_companies') }}
                     </span>
                 </span>
-                <span class="mt-0.5 block text-xs leading-relaxed text-amber-800">
+                <span class="mt-0.5 block text-xs leading-relaxed text-warn-300">
                     {{ __('app.auth.company_pending_body') }}
                 </span>
             </span>
-            <span class="hidden shrink-0 items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2.5
+            <span class="hidden shrink-0 items-center gap-1.5 rounded-lg bg-warn-500 px-4 py-2.5
                          text-sm font-bold text-white sm:flex">
                 {{ __('app.dashboard.review_now') }}
                 <x-ui.icon name="chevron-end" class="size-4 rtl:rotate-180" />
@@ -67,13 +67,13 @@
 
     <div class="mb-4 grid gap-4 lg:grid-cols-3">
         <x-ui.card class="lg:col-span-1">
-            <p class="text-xs font-medium text-ink-500">{{ __('app.dashboard.revenue') }}</p>
-            <p class="mt-1 text-5xl font-semibold tracking-tight text-ink-900">
+            <p class="text-xs font-medium text-ink-400">{{ __('app.dashboard.revenue') }}</p>
+            <p class="mt-1 text-5xl font-semibold tracking-tight text-white">
                 {{ $o['volume']->format(false) }}
                 <span class="text-lg font-medium text-ink-400">{{ config('platform.currency.code') }}</span>
             </p>
             <div class="mt-3 flex items-end justify-between gap-3">
-                <p class="text-xs text-ink-500">
+                <p class="text-xs text-ink-400">
                     {{ __('app.dashboard.platform_fees') }}
                     <span class="tnum font-semibold text-emerald-700">
                         {{ $o['platform_fees']->format(false) }}
@@ -109,8 +109,8 @@
                     :hint="__('app.nav.deliveries')" />
 
                 <div>
-                    <p class="truncate text-xs font-medium text-ink-500">{{ __('app.dashboard.average_time') }}</p>
-                    <p class="mt-0.5 text-lg font-semibold text-ink-900">
+                    <p class="truncate text-xs font-medium text-ink-400">{{ __('app.dashboard.average_time') }}</p>
+                    <p class="mt-0.5 text-lg font-semibold text-white">
                         {{ $o['average_minutes'] !== null ? $o['average_minutes'].' '.__('app.common.minutes') : '—' }}
                     </p>
                     <p class="mt-1.5 flex items-center gap-1 text-2xs text-ink-400">

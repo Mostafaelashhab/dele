@@ -44,10 +44,10 @@
         </div>
 
         @if ($isOffered && $assignment?->expires_at)
-            <div class="flex items-center justify-center gap-2 rounded-md bg-amber-50 px-4 py-2.5
-                        ring-1 ring-inset ring-amber-200">
-                <x-ui.icon name="clock" class="size-4 text-amber-700" />
-                <span class="tnum text-sm font-semibold text-amber-900"
+            <div class="flex items-center justify-center gap-2 rounded-md bg-warn-50 px-4 py-2.5
+                        ring-1 ring-inset ring-warn-200">
+                <x-ui.icon name="clock" class="size-4 text-warn-700" />
+                <span class="tnum text-sm font-semibold text-warn-900"
                       x-data="{ left: {{ $assignment->secondsRemaining() }} }"
                       x-init="setInterval(() => left > 0 && left--, 1000)">
                     <span x-text="left"></span>s
@@ -144,9 +144,9 @@
         </section>
 
         @if ($order->payment_type->requiresCollection())
-            <div class="flex items-center justify-between rounded-card border-2 border-amber-300 bg-amber-50 px-4 py-3">
-                <span class="text-sm font-bold text-amber-900">{{ __('rider.app.collect_cod') }}</span>
-                <span class="tnum text-xl font-bold text-amber-900">
+            <div class="flex items-center justify-between rounded-card border-2 border-warn-300 bg-warn-50 px-4 py-3">
+                <span class="text-sm font-bold text-warn-900">{{ __('rider.app.collect_cod') }}</span>
+                <span class="tnum text-xl font-bold text-warn-900">
                     {{ $order->cod_amount_minor->format() }}
                 </span>
             </div>

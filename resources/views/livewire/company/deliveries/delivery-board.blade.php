@@ -61,17 +61,17 @@
                                         {{ $delivery->order->number }}
                                     </a>
                                 </td>
-                                <td class="text-ink-700">{{ $delivery->business->displayName() }}</td>
-                                <td class="text-ink-700">{{ $delivery->order->dropoffSnapshot()->area ?? '—' }}</td>
-                                <td class="text-ink-700">{{ $delivery->rider?->name ?? __('app.common.unassigned') }}</td>
+                                <td class="text-ink-200">{{ $delivery->business->displayName() }}</td>
+                                <td class="text-ink-200">{{ $delivery->order->dropoffSnapshot()->area ?? '—' }}</td>
+                                <td class="text-ink-200">{{ $delivery->rider?->name ?? __('app.common.unassigned') }}</td>
                                 <td>
                                     <x-ui.badge :tone="$delivery->status->tone()" dot>
                                         {{ $delivery->status->label() }}
                                     </x-ui.badge>
                                 </td>
                                 <td class="tnum text-end">{{ $delivery->companyPayout()->format(false) }}</td>
-                                <td class="tnum text-end text-ink-500">
-                                    {{ $delivery->created_at->translatedFormat('d M H:i') }}
+                                <td class="tnum text-end text-ink-400">
+                                    {{ $delivery->created_at->translatedFormat('d M g:i A') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -80,7 +80,7 @@
             </div>
 
             @if ($deliveries->hasPages())
-                <div class="border-t border-ink-200 px-4 py-3">{{ $deliveries->links() }}</div>
+                <div class="border-t border-white/10 px-4 py-3">{{ $deliveries->links() }}</div>
             @endif
         @endif
     </x-ui.card>

@@ -43,12 +43,12 @@
                 <x-ui.field :label="__('form.max_concurrent_company')" name="maxConcurrent">
                     <input type="number" min="1" max="500" wire:model="maxConcurrent" class="field-input tnum">
                 </x-ui.field>
-                <label class="flex items-start gap-2 self-end pb-2 text-sm text-ink-700">
+                <label class="flex items-start gap-2 self-end pb-2 text-sm text-ink-200">
                     <input type="checkbox" wire:model="autoAccept"
-                           class="mt-0.5 size-4 rounded border-ink-300 text-signal-600">
+                           class="mt-0.5 size-4 rounded border-white/15 text-signal-600">
                     <span>
                         <span class="block font-medium">{{ __('form.auto_assign') }}</span>
-                        <span class="block text-xs text-ink-500">{{ __('form.auto_assign_hint') }}</span>
+                        <span class="block text-xs text-ink-400">{{ __('form.auto_assign_hint') }}</span>
                     </span>
                 </label>
             </div>
@@ -57,10 +57,10 @@
         <x-ui.card :title="__('app.nav.service_areas')">
             <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 @foreach ($this->zones as $zone)
-                    <label class="flex items-center gap-2 rounded-md border border-ink-200 px-2.5 py-2 text-sm">
+                    <label class="flex items-center gap-2 rounded-md border border-white/10 px-2.5 py-2 text-sm">
                         <input type="checkbox" value="{{ $zone->id }}" wire:model="zoneIds"
-                               class="size-4 rounded border-ink-300 text-signal-600">
-                        <span class="truncate text-ink-700">{{ $zone->displayName() }}</span>
+                               class="size-4 rounded border-white/15 text-signal-600">
+                        <span class="truncate text-ink-200">{{ $zone->displayName() }}</span>
                     </label>
                 @endforeach
             </div>
@@ -68,9 +68,9 @@
         </x-ui.card>
 
         <x-ui.card :title="__('app.auth.login')">
-            <label class="mb-4 flex items-center gap-2 text-sm text-ink-700">
+            <label class="mb-4 flex items-center gap-2 text-sm text-ink-200">
                 <input type="checkbox" wire:model.live="createLogin"
-                       class="size-4 rounded border-ink-300 text-signal-600">
+                       class="size-4 rounded border-white/15 text-signal-600">
                 {{ __('account.role.company_owner') }}
             </label>
 

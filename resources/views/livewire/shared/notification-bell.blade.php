@@ -1,6 +1,6 @@
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" wire:poll.20s>
     <button type="button" @click="open = !open"
-            class="relative rounded-md p-1.5 text-ink-600 transition hover:bg-ink-100"
+            class="relative rounded-md p-1.5 text-ink-300 transition hover:bg-white/[0.06]"
             aria-label="{{ __('app.nav.notifications') }}">
         <x-ui.icon name="bell" class="size-5" />
         @if ($this->unreadCount > 0)
@@ -12,10 +12,10 @@
     </button>
 
     <div x-show="open" x-cloak x-transition.opacity
-         class="absolute z-40 mt-2 w-80 overflow-hidden rounded-card border border-ink-200 bg-white shadow-lg
+         class="absolute z-40 mt-2 w-80 overflow-hidden rounded-card border border-white/10 bg-white shadow-lg
                 ltr:right-0 rtl:left-0">
-        <div class="flex items-center justify-between border-b border-ink-200 px-3 py-2">
-            <p class="text-xs font-semibold text-ink-900">{{ __('app.nav.notifications') }}</p>
+        <div class="flex items-center justify-between border-b border-white/10 px-3 py-2">
+            <p class="text-xs font-semibold text-white">{{ __('app.nav.notifications') }}</p>
             @if ($this->unreadCount > 0)
                 <button type="button" wire:click="markAllRead"
                         class="text-2xs font-semibold text-signal-600 hover:text-signal-800">
@@ -29,13 +29,13 @@
                 @php $data = $notification->data; @endphp
                 <a href="{{ $data['url'] ?? '#' }}" wire:navigate
                    @class([
-                       'block border-b border-ink-100 px-3 py-2.5 transition hover:bg-ink-50',
+                       'block border-b border-white/5 px-3 py-2.5 transition hover:bg-white/5',
                        'bg-signal-50/60' => $notification->read_at === null,
                    ])>
-                    <p class="text-xs font-semibold text-ink-900">
+                    <p class="text-xs font-semibold text-white">
                         {{ $data['order_number'] ?? __('app.name') }}
                     </p>
-                    <p class="mt-0.5 text-2xs text-ink-600">
+                    <p class="mt-0.5 text-2xs text-ink-300">
                         @if (($data['type'] ?? null) === 'delivery_offer')
                             {{ __('delivery.event.DeliveryCompanyOffered') }} — {{ $data['pickup_area'] ?? '' }}
                         @elseif (($data['type'] ?? null) === 'rider_assignment')
@@ -49,7 +49,7 @@
                     <p class="mt-1 text-2xs text-ink-400">{{ $notification->created_at->diffForHumans() }}</p>
                 </a>
             @empty
-                <p class="px-3 py-8 text-center text-xs text-ink-500">{{ __('notification.empty') }}</p>
+                <p class="px-3 py-8 text-center text-xs text-ink-400">{{ __('notification.empty') }}</p>
             @endforelse
         </div>
     </div>

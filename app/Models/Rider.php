@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'delivery_company_id', 'user_id', 'name', 'phone', 'national_id', 'status',
     'vehicle_type', 'vehicle_identifier', 'max_concurrent_deliveries',
-])]
+    'id_card_front_path', 'id_card_back_path', ])]
 class Rider extends Model
 {
     /** @use HasFactory<RiderFactory> */
@@ -40,6 +40,7 @@ class Rider extends Model
             'active_deliveries_count' => 'integer',
             'rating_bps' => 'integer',
             'acceptance_rate_bps' => 'integer',
+            'identity_verified_at' => 'datetime',
             'completion_rate_bps' => 'integer',
             'completed_deliveries_count' => 'integer',
             'current_latitude' => 'float',
@@ -104,6 +105,25 @@ class Rider extends Model
     {
         return $query->where('status', RiderStatus::Online)
             ->whereColumn('active_deliveries_count', '<', 'max_concurrent_deliveries');
+    }
+
+    /**
+     * Has someone checked this rider is who they say they are?
+     *
+     * Only asked of a rider with no company behind them: a company vouches
+     * for the people it employs, and takes responsibility for them. Somebody
+     * signing up alone has nobody to vouch for them, so the platform looks at
+     * an ID before letting them carry a stranger's parcel.
+     */
+    public function needsIdentityCheck(): bool
+    {
+        return $this->deliveryCompany?->is_solo === true
+            && $this->identity_verified_at === null;
+    }
+
+    public function hasSubmittedIdentity(): bool
+    {
+        return filled($this->id_card_front_path) && filled($this->photo_path);
     }
 
     public function currentLocation(): ?GeoPoint

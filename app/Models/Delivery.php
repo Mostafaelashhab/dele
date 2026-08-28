@@ -30,7 +30,7 @@ use Illuminate\Support\Str;
     'tracking_token', 'status', 'attempt', 'provider', 'provider_reference',
     'distance_meters', 'estimated_minutes', 'estimated_delivery_at', 'currency',
     'price_minor', 'platform_fee_minor', 'company_payout_minor',
-    'rider_payout_minor', 'price_breakdown', 'matching_snapshot',
+    'rider_payout_minor', 'price_breakdown', 'matching_snapshot', 'is_external',
 ])]
 class Delivery extends Model
 {
@@ -107,6 +107,7 @@ class Delivery extends Model
             'dispatch_round' => 'integer',
             'offers_sent_count' => 'integer',
             'financials_recorded' => 'boolean',
+            'is_external' => 'boolean',
             'confirmation_attempts' => 'integer',
             'confirmation_code_verified_at' => 'datetime',
             'estimated_delivery_at' => 'datetime',
@@ -205,6 +206,14 @@ class Delivery extends Model
     public function events(): HasMany
     {
         return $this->hasMany(OrderEvent::class);
+    }
+
+    /**
+     * Problems the recipient has reported against this delivery.
+     */
+    public function issues(): HasMany
+    {
+        return $this->hasMany(DeliveryIssue::class);
     }
 
     /**

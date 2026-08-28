@@ -9,7 +9,7 @@
 --}}
 <fieldset {{ $attributes->merge(['class' => 'min-w-0']) }}>
     <legend class="mb-3 flex w-full items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-wider text-ink-500">{{ $legend }}</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-ink-400">{{ $legend }}</span>
         <span class="h-px flex-1 bg-ink-200" aria-hidden="true"></span>
     </legend>
 

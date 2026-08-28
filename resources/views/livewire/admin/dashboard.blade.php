@@ -20,27 +20,50 @@
                    icon="store" :href="route('admin.companies.index')" />
     </div>
 
-    <div class="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <x-ui.stat :label="__('app.dashboard.revenue')" :value="$m['volume']->format(false)" icon="money" />
-        <x-ui.stat :label="__('app.dashboard.platform_fees')" :value="$m['platform_fees']->format(false)"
-                   icon="chart" tone="green" />
-        <x-ui.stat :label="__('app.dashboard.failed_deliveries')" :value="$m['failed']"
-                   icon="alert" :tone="$m['failed'] > 0 ? 'red' : 'neutral'" />
-        <x-ui.stat :label="__('app.dashboard.average_time')"
-                   :value="$m['average_minutes'] !== null ? $m['average_minutes'].' '.__('app.common.minutes') : '—'"
-                   icon="clock" />
-    </div>
+    {{-- The reference figures. They were a second row of full cards, which
+         gave eight numbers the same weight and left the screen with no
+         starting point. Platform fees are gone from here entirely: the
+         network charges nothing during the pilot, so the card was a
+         permanent zero taking the place of something useful. --}}
+    <x-ui.stat-row class="mt-3" :items="[
+        [
+            'label' => __('app.dashboard.revenue'),
+            'value' => $m['volume']->format(false),
+            'icon' => 'money',
+        ],
+        [
+            'label' => __('app.dashboard.average_time'),
+            'value' => $m['average_minutes'] !== null
+                ? $m['average_minutes'].' '.__('app.common.minutes')
+                : '—',
+            'icon' => 'clock',
+        ],
+        [
+            'label' => __('app.dashboard.failed_deliveries'),
+            'value' => (string) $m['failed'],
+            'icon' => 'alert',
+            'tone' => $m['failed'] > 0 ? 'red' : null,
+        ],
+        [
+            'label' => __('app.dashboard.proof_rate'),
+            'value' => $m['proof_rate'] !== null
+                ? number_format($m['proof_rate'] * 100, 0).'%'
+                : '—',
+            'icon' => 'shield',
+            'tone' => 'green',
+        ],
+    ]" />
 
     @if ($m['supply_gaps'] > 0)
         {{-- A supply gap is the one number that should interrupt an operator:
              it means a business asked and the network had nobody to send. --}}
-        <div class="mt-3 flex items-start gap-2.5 rounded-card border border-amber-300 bg-amber-50 px-4 py-3">
-            <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-amber-700" />
+        <div class="mt-3 flex items-start gap-2.5 rounded-card border border-warn-500/35 bg-warn-500/10 px-4 py-3">
+            <x-ui.icon name="alert" class="mt-0.5 size-4 shrink-0 text-warn-300" />
             <div>
-                <p class="text-sm font-semibold text-amber-900">
+                <p class="text-sm font-semibold text-warn-200">
                     {{ __('app.dashboard.supply_gap') }}: <span class="tnum">{{ $m['supply_gaps'] }}</span>
                 </p>
-                <p class="text-xs text-amber-800">{{ __('delivery.event.NoCompanyAvailable') }}</p>
+                <p class="text-xs text-warn-300">{{ __('delivery.event.NoCompanyAvailable') }}</p>
             </div>
         </div>
     @endif
@@ -78,19 +101,19 @@
                                             {{ $delivery->order->number }}
                                         </a>
                                     </td>
-                                    <td class="text-ink-700">{{ $delivery->business->displayName() }}</td>
-                                    <td class="text-ink-700">
+                                    <td class="text-ink-200">{{ $delivery->business->displayName() }}</td>
+                                    <td class="text-ink-200">
                                         {{ $delivery->deliveryCompany?->displayName() ?? __('app.common.unassigned') }}
                                     </td>
-                                    <td class="text-ink-700">{{ $delivery->rider?->name ?? '—' }}</td>
+                                    <td class="text-ink-200">{{ $delivery->rider?->name ?? '—' }}</td>
                                     <td>
                                         <x-ui.badge :tone="$delivery->status->tone()" dot>
                                             {{ $delivery->status->label() }}
                                         </x-ui.badge>
                                     </td>
                                     <td class="tnum text-end">{{ $delivery->price()->format(false) }}</td>
-                                    <td class="tnum text-end {{ $delivery->isLate() ? 'font-semibold text-red-600' : 'text-ink-500' }}">
-                                        {{ $delivery->estimatedArrival()?->translatedFormat('H:i') ?? '—' }}
+                                    <td class="tnum text-end {{ $delivery->isLate() ? 'font-semibold text-red-600' : 'text-ink-400' }}">
+                                        {{ $delivery->estimatedArrival()?->shortTime() ?? '—' }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -101,18 +124,18 @@
         </x-ui.card>
 
         <x-ui.card :title="__('app.dashboard.pending_offers')" flush>
-            <ul class="divide-y divide-ink-100">
+            <ul class="divide-y divide-white/5">
                 @forelse ($this->openOffers as $offer)
                     <li class="px-4 py-2.5" wire:key="{{ $offer->id }}">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="truncate text-sm font-medium text-ink-900">
+                            <span class="truncate text-sm font-medium text-white">
                                 {{ $offer->delivery->order->number }}
                             </span>
-                            <span class="tnum shrink-0 text-xs font-semibold text-amber-700">
+                            <span class="tnum shrink-0 text-xs font-semibold text-warn-300">
                                 {{ $offer->secondsRemaining() }}s
                             </span>
                         </div>
-                        <p class="mt-0.5 truncate text-2xs text-ink-500">
+                        <p class="mt-0.5 truncate text-2xs text-ink-400">
                             {{ $offer->deliveryCompany->displayName() }}
                         </p>
                     </li>
