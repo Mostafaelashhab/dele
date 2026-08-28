@@ -1,0 +1,109 @@
+<?php
+
+return [
+    'status' => [
+        'draft' => 'مسودة',
+        'pending' => 'قيد الانتظار',
+        'searching' => 'جارٍ البحث عن شركة',
+        'offered' => 'تم إرسال العرض',
+        'accepted' => 'تم القبول',
+        'assigned' => 'تم تعيين مندوب',
+        'arrived_at_pickup' => 'وصل لنقطة الاستلام',
+        'picked_up' => 'تم الاستلام',
+        'in_transit' => 'في الطريق',
+        'arrived_at_destination' => 'وصل للعميل',
+        'delivered' => 'تم التسليم',
+        'failed' => 'فشل التسليم',
+        'cancelled' => 'ملغي',
+        'expired' => 'منتهي الصلاحية',
+    ],
+
+    'offer' => [
+        'pending' => 'بانتظار الرد',
+        'accepted' => 'مقبول',
+        'rejected' => 'مرفوض',
+        'expired' => 'انتهت مهلته',
+        'withdrawn' => 'مسحوب',
+    ],
+
+    'assignment' => [
+        'offered' => 'معروض على المندوب',
+        'accepted' => 'قبله المندوب',
+        'rejected' => 'رفضه المندوب',
+        'cancelled' => 'ملغي',
+        'completed' => 'مكتمل',
+        'failed' => 'فشل',
+    ],
+
+    'priority' => [
+        'standard' => 'عادي',
+        'express' => 'سريع',
+        'scheduled' => 'مجدول',
+    ],
+
+    'package' => [
+        'small' => 'صغير',
+        'medium' => 'متوسط',
+        'large' => 'كبير',
+        'bulky' => 'ضخم',
+    ],
+
+    'event' => [
+        'OrderCreated' => 'تم إنشاء الطلب',
+        'DeliveryRequested' => 'تم طلب التوصيل',
+        'DeliveryCompanyOffered' => 'تم عرض الطلب على شركات التوصيل',
+        'DeliveryOfferRejected' => 'رفضت الشركة العرض',
+        'DeliveryOfferExpired' => 'انتهت مهلة العرض',
+        'DeliveryAccepted' => 'قبلت شركة التوصيل الطلب',
+        'RiderAssigned' => 'تم تعيين مندوب',
+        'RiderArrivedAtPickup' => 'وصل المندوب لنقطة الاستلام',
+        'OrderPickedUp' => 'تم استلام الطلب',
+        'DeliveryStarted' => 'بدأ التوصيل',
+        'RiderArrived' => 'وصل المندوب للعميل',
+        'OrderDelivered' => 'تم تسليم الطلب',
+        'OrderFailed' => 'فشل التسليم',
+        'OrderCancelled' => 'تم إلغاء الطلب',
+        'DeliveryExpired' => 'انتهت صلاحية الطلب',
+        'NoCompanyAvailable' => 'لا توجد شركة متاحة حالياً',
+        'PriceQuoted' => 'تم تسعير الطلب',
+        'FinancialsRecorded' => 'تم تسجيل الحركة المالية',
+    ],
+
+    'errors' => [
+        'invalid_transition' => 'لا يمكن نقل الطلب من حالة «:from» إلى «:to».',
+        'offer_not_answerable' => 'انتهت مهلة هذا العرض أو تم الرد عليه بالفعل.',
+        'already_assigned' => 'تم إسناد هذا الطلب لشركة أخرى بالفعل.',
+        'assignment_not_answerable' => 'انتهت مهلة هذا التعيين أو تم الرد عليه.',
+        'rider_wrong_company' => 'المندوب لا يتبع شركة التوصيل المسؤولة عن الطلب.',
+        'rider_unavailable' => 'المندوب غير متاح أو وصل للحد الأقصى من الطلبات.',
+        'rider_at_capacity' => 'وصلت للحد الأقصى من الطلبات المتزامنة.',
+        'not_assignable' => 'لا يمكن تعيين مندوب لهذا الطلب في حالته الحالية.',
+        'not_your_delivery' => 'هذا الطلب غير مسند إليك.',
+        'not_cancellable' => 'لا يمكن إلغاء الطلب بعد استلامه من المتجر.',
+    ],
+
+    'proof' => [
+        'title' => 'إثبات التسليم',
+        'by_code' => 'اتأكد بكود العميل',
+        'photo_count' => '{1} صورة واحدة|{2} صورتين|[3,10] :count صور|[11,*] :count صورة',
+        'none' => 'من غير إثبات مرفق',
+        'received_by' => 'استلمها',
+        'open_full' => 'افتح الصورة',
+    ],
+
+    'labels' => [
+        'pickup' => 'الاستلام',
+        'dropoff' => 'التسليم',
+        'customer' => 'العميل',
+        'rider' => 'المندوب',
+        'company' => 'شركة التوصيل',
+        'price' => 'السعر',
+        'distance' => 'المسافة',
+        'eta' => 'الوقت المتوقع',
+        'tracking' => 'رابط التتبع',
+        'timeline' => 'سجل الحالة',
+        'proof' => 'إثبات التسليم',
+        'notes' => 'ملاحظات',
+        'payout' => 'العائد',
+    ],
+];

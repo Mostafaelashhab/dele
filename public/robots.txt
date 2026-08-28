@@ -1,0 +1,21 @@
+# banha.shop
+#
+# The public marketing page is the only thing worth indexing. Everything else
+# is either behind a login or, in the case of a tracking link, a customer's
+# address and phone number behind a token that must never reach an index.
+
+User-agent: *
+Allow: /$
+Allow: /register
+Allow: /login
+
+Disallow: /track/
+Disallow: /admin
+Disallow: /app
+Disallow: /company
+Disallow: /rider
+Disallow: /api/
+Disallow: /livewire
+Disallow: /storage/
+
+Sitemap: https://banha.shop/sitemap.xml

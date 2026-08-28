@@ -1,0 +1,19 @@
+# Shared hosting fallback.
+#
+# Laravel serves from public/, but a shared host often pins the document root
+# to the account folder and will not let you move it. This forwards everything
+# into public/ so the application still boots, while keeping the source, the
+# .env and the database out of the web root.
+#
+# If the panel DOES let you point the domain at public/, do that instead and
+# delete this file — a rewrite is a workaround, not a document root.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<FilesMatch "^(\.env.*|composer\.(json|lock)|package(-lock)?\.json|.*\.sqlite)$">
+    Require all denied
+</FilesMatch>

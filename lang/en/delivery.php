@@ -1,0 +1,109 @@
+<?php
+
+return [
+    'status' => [
+        'draft' => 'Draft',
+        'pending' => 'Pending',
+        'searching' => 'Searching for a company',
+        'offered' => 'Offer sent',
+        'accepted' => 'Accepted',
+        'assigned' => 'Rider assigned',
+        'arrived_at_pickup' => 'At pickup',
+        'picked_up' => 'Picked up',
+        'in_transit' => 'On the way',
+        'arrived_at_destination' => 'At destination',
+        'delivered' => 'Delivered',
+        'failed' => 'Failed',
+        'cancelled' => 'Cancelled',
+        'expired' => 'Expired',
+    ],
+
+    'offer' => [
+        'pending' => 'Awaiting response',
+        'accepted' => 'Accepted',
+        'rejected' => 'Rejected',
+        'expired' => 'Expired',
+        'withdrawn' => 'Withdrawn',
+    ],
+
+    'assignment' => [
+        'offered' => 'Offered to rider',
+        'accepted' => 'Accepted by rider',
+        'rejected' => 'Rejected by rider',
+        'cancelled' => 'Cancelled',
+        'completed' => 'Completed',
+        'failed' => 'Failed',
+    ],
+
+    'priority' => [
+        'standard' => 'Standard',
+        'express' => 'Express',
+        'scheduled' => 'Scheduled',
+    ],
+
+    'package' => [
+        'small' => 'Small',
+        'medium' => 'Medium',
+        'large' => 'Large',
+        'bulky' => 'Bulky',
+    ],
+
+    'event' => [
+        'OrderCreated' => 'Order created',
+        'DeliveryRequested' => 'Delivery requested',
+        'DeliveryCompanyOffered' => 'Offered to delivery companies',
+        'DeliveryOfferRejected' => 'Offer rejected by company',
+        'DeliveryOfferExpired' => 'Offer expired',
+        'DeliveryAccepted' => 'Accepted by delivery company',
+        'RiderAssigned' => 'Rider assigned',
+        'RiderArrivedAtPickup' => 'Rider arrived at pickup',
+        'OrderPickedUp' => 'Order picked up',
+        'DeliveryStarted' => 'Delivery started',
+        'RiderArrived' => 'Rider arrived at destination',
+        'OrderDelivered' => 'Order delivered',
+        'OrderFailed' => 'Delivery failed',
+        'OrderCancelled' => 'Order cancelled',
+        'DeliveryExpired' => 'Delivery expired',
+        'NoCompanyAvailable' => 'No company available',
+        'PriceQuoted' => 'Price quoted',
+        'FinancialsRecorded' => 'Financials recorded',
+    ],
+
+    'errors' => [
+        'invalid_transition' => 'A delivery cannot move from ":from" to ":to".',
+        'offer_not_answerable' => 'This offer has expired or has already been answered.',
+        'already_assigned' => 'This delivery has already been taken by another company.',
+        'assignment_not_answerable' => 'This assignment has expired or has already been answered.',
+        'rider_wrong_company' => 'The rider does not belong to the company handling this delivery.',
+        'rider_unavailable' => 'The rider is unavailable or already at capacity.',
+        'rider_at_capacity' => 'You are already carrying the maximum number of deliveries.',
+        'not_assignable' => 'A rider cannot be assigned to this delivery in its current state.',
+        'not_your_delivery' => 'This delivery is not assigned to you.',
+        'not_cancellable' => 'A delivery cannot be cancelled once it has been picked up.',
+    ],
+
+    'proof' => [
+        'title' => 'Proof of delivery',
+        'by_code' => 'Confirmed by recipient code',
+        'photo_count' => '{1} 1 photo|[2,*] :count photos',
+        'none' => 'No proof attached',
+        'received_by' => 'Received by',
+        'open_full' => 'Open full size',
+    ],
+
+    'labels' => [
+        'pickup' => 'Pickup',
+        'dropoff' => 'Dropoff',
+        'customer' => 'Customer',
+        'rider' => 'Rider',
+        'company' => 'Delivery company',
+        'price' => 'Price',
+        'distance' => 'Distance',
+        'eta' => 'ETA',
+        'tracking' => 'Tracking link',
+        'timeline' => 'Timeline',
+        'proof' => 'Proof of delivery',
+        'notes' => 'Notes',
+        'payout' => 'Payout',
+    ],
+];

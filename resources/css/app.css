@@ -1,0 +1,540 @@
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../app/Livewire/**/*.php';
+
+/*
+ | Banha Delivery Network — design tokens
+ |
+ | The visual language is operational software, not a marketing site: a tight
+ | neutral ramp, one decisive accent, and a status palette that has to stay
+ | legible at a glance on a warehouse phone in daylight.
+ */
+/* A pointer that can hover and a finger are two different interfaces, and the
+   difference is not screen width — a touchscreen laptop is wide and cannot
+   hover. Anything that pairs on hover has to say something else to a finger,
+   so these two variants gate the wording and the behaviour together. */
+@custom-variant can-hover (@media (hover: hover));
+@custom-variant no-hover (@media (hover: none));
+
+@theme {
+    --font-sans: 'IBM Plex Sans Arabic', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+
+    /* Ink — near-black neutrals carry almost all of the interface. */
+    --color-ink-50: #f6f7f9;
+    --color-ink-100: #eceef2;
+    --color-ink-200: #d5dae2;
+    --color-ink-300: #b0b9c7;
+    --color-ink-400: #8492a6;
+    --color-ink-500: #64748b;
+    --color-ink-600: #4c5769;
+    --color-ink-700: #3d4655;
+    --color-ink-800: #2a313c;
+    --color-ink-900: #171c24;
+    --color-ink-950: #0d1117;
+
+    /* Signal — the single accent, used only for primary action and focus. */
+    --color-signal-50: #eef4ff;
+    --color-signal-100: #d9e6ff;
+    --color-signal-200: #bcd3ff;
+    --color-signal-300: #8eb6ff;
+    --color-signal-400: #598eff;
+    --color-signal-500: #3366f2;
+    --color-signal-600: #1e46d6;
+    --color-signal-700: #1937ac;
+    --color-signal-800: #1a318a;
+    --color-signal-900: #1b2f6d;
+
+    /* Ember — the warm counterpart to signal blue. Marketing surfaces and
+       wayfinding only; it is deliberately absent from the operational UI and
+       from every chart series, so it can never be mistaken for a status. */
+    --color-ember-50: #fff5ed;
+    --color-ember-100: #ffe8d4;
+    --color-ember-200: #fecda9;
+    --color-ember-300: #fdaa72;
+    --color-ember-400: #fb7c39;
+    --color-ember-500: #f95c13;
+    --color-ember-600: #ea4209;
+    --color-ember-700: #c22f09;
+    --color-ember-800: #9a2810;
+    --color-ember-900: #7c2410;
+
+    --radius-card: 0.5rem;
+
+    --text-2xs: 0.6875rem;
+    --text-2xs--line-height: 1rem;
+
+    /* Data visualisation.
+       Validated with the palette validator against the white card surface:
+       adjacent CVD ΔE 25.8, normal-vision ΔE 36.9, both series clear 3:1.
+       Series colours dress marks only — never text. */
+    --color-viz-series-1: #1e46d6;
+    --color-viz-critical: #d03b3b;
+    --color-viz-good: #0ca30c;
+    --color-viz-warning: #fab219;
+    --color-viz-grid: #e6e9ef;
+    --color-viz-axis: #cbd2dd;
+    --color-viz-track: #dbe4fb;
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-ink-100 text-ink-900 font-sans antialiased;
+        font-feature-settings: 'ss01', 'cv01';
+    }
+
+    /* Tabular figures everywhere numbers are compared down a column — prices,
+       distances, counts, timers. Proportional digits make a table of money
+       genuinely harder to scan. */
+    .tnum,
+    table td,
+    table th {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [dir='rtl'] .rtl-flip {
+        transform: scaleX(-1);
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-signal-500;
+    }
+}
+
+@layer base {
+    /* Alpine strips x-cloak once it has booted. Without this rule the
+       attribute does nothing, and every element that relies on it — mobile
+       drawers, dropdowns, the chart table twin — is painted in its open
+       state for the moment before Alpine runs. */
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /* ── The public page's dark canvas ────────────────────────────────
+       The marketing page is dark and the product is light, which is the
+       whole visual idea: every screenshot, chart and map on the page is the
+       real interface, and a white surface on a near-black ground reads as a
+       screen rather than as a decorated box. So the primitives come in two
+       families — dark panels for argument, lit panels for product. */
+
+    /* A hairline engineering grid. Quieter than a dot field at large sizes
+       and it gives the eye a sense of scale behind big type. */
+    .grid-field {
+        position: relative;
+        background-image:
+            linear-gradient(to right, rgb(255 255 255 / 3.5%) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(255 255 255 / 3.5%) 1px, transparent 1px);
+        background-size: 72px 72px;
+    }
+
+    /* Fades the grid out at the edges so it never collides with a border. */
+    .grid-field::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(120% 90% at 50% 0%, transparent 30%, var(--color-ink-950) 100%);
+        pointer-events: none;
+    }
+
+    /* A pool of accent light. Used at most once per section, behind the
+       thing the section is actually about. */
+    .accent-pool::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        inset-block-start: -10%;
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        width: min(46rem, 100%);
+        height: 22rem;
+        background: radial-gradient(50% 50% at 50% 50%, rgb(249 92 19 / 16%), transparent 70%);
+        pointer-events: none;
+    }
+
+    .accent-pool-cool::after {
+        background: radial-gradient(50% 50% at 50% 50%, rgb(51 102 242 / 18%), transparent 70%);
+    }
+
+    /* Argument surfaces. */
+    .panel {
+        @apply rounded-2xl border border-white/10 bg-white/[0.03];
+    }
+
+    .panel-hover {
+        @apply transition hover:border-white/20 hover:bg-white/[0.055];
+    }
+
+    /* Product surfaces: a real screen, lifted off the dark ground. */
+    .panel-lit {
+        @apply rounded-2xl bg-white text-ink-900 shadow-2xl shadow-black/40 ring-1 ring-white/10;
+    }
+
+    /* The numeral that opens each section. Tabular so 01 and 08 are the same
+       width, and quiet enough to be a marker rather than a heading. */
+    .section-index {
+        /* ink-400, not ink-500: at this size the numeral is text, and
+           ink-500 measures 3.98:1 on the page ground — under AA. */
+        @apply text-xs font-bold tracking-[0.2em] text-ink-400;
+        /* Inlined rather than @apply tnum: that utility is defined in a
+           later layer than this one and is not resolvable from here. */
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* A hairline that starts hot and fades, used under section headings so
+       the rule itself carries a little of the accent. */
+    .rule-fade {
+        height: 1px;
+        background: linear-gradient(
+            to var(--rule-direction, right),
+            var(--color-ember-500),
+            rgb(255 255 255 / 12%) 22%,
+            transparent 65%
+        );
+    }
+
+    [dir='rtl'] .rule-fade {
+        --rule-direction: left;
+    }
+}
+
+@layer components {
+    /* Operational tables are dense on purpose: a dispatcher should see twenty
+       rows without scrolling, not six. */
+    .data-table {
+        @apply w-full text-start text-sm;
+    }
+
+    .data-table thead th {
+        @apply bg-ink-50 text-2xs font-semibold uppercase tracking-wide text-ink-500
+               px-3 py-2 text-start border-b border-ink-200 whitespace-nowrap;
+    }
+
+    .data-table tbody td {
+        @apply px-3 py-2.5 border-b border-ink-100 align-middle;
+    }
+
+    .data-table tbody tr:hover {
+        @apply bg-ink-50/70;
+    }
+
+    .field-label {
+        @apply block text-xs font-semibold text-ink-700 mb-1.5;
+    }
+
+    .field-input {
+        @apply block w-full rounded-md border border-ink-300 bg-white px-3 py-2 text-sm
+               text-ink-900 placeholder:text-ink-400 shadow-xs
+               focus:border-signal-500 focus:ring-2 focus:ring-signal-500/20 focus:outline-none
+               disabled:bg-ink-50 disabled:text-ink-500;
+    }
+
+    .field-error {
+        @apply mt-1 text-xs font-medium text-red-600;
+    }
+}
+
+/* The rider app is used one-handed, outdoors, in a hurry. Targets are large,
+   text selection is off, and the safe-area insets are respected so the primary
+   action never sits under a home indicator. */
+@layer utilities {
+    .touch-target {
+        @apply min-h-14 select-none;
+    }
+
+    .safe-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .safe-top {
+        padding-top: max(0.5rem, env(safe-area-inset-top));
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+/* Leaflet, restyled to the platform's own language.
+
+   The default control chrome is heavy and blue; these overrides make the map
+   read as part of the interface rather than an embedded widget, and keep the
+   attribution legible without letting it dominate a small card. */
+@layer components {
+    .map-surface {
+        @apply relative overflow-hidden rounded-card border border-ink-200 bg-ink-100;
+        /* Height arrives as two custom properties rather than an inline
+           height, because a map tall enough to be useful on a desktop eats a
+           whole phone screen. Narrow viewports get the smaller of the two. */
+        height: var(--map-height-narrow, 320px);
+    }
+
+    @media (min-width: 640px) {
+        .map-surface {
+            height: var(--map-height, 360px);
+        }
+    }
+
+    .map-surface .leaflet-container {
+        @apply h-full w-full bg-ink-100 font-sans;
+        /* The map is geographic, so its own contents stay left-to-right even
+           when the surrounding interface is Arabic. */
+        direction: ltr;
+    }
+
+    .map-surface .leaflet-control-zoom a {
+        @apply flex size-8 items-center justify-center border-ink-200 bg-white
+               text-base font-semibold text-ink-700 shadow-none;
+    }
+
+    .map-surface .leaflet-control-zoom a:hover {
+        @apply bg-ink-50 text-ink-900;
+    }
+
+    /* Attribution.
+
+       OpenStreetMap data is ODbL-licensed and crediting it is a condition of
+       use, not a preference — and the public tile servers block origins that
+       strip it. So it stays, reduced to a discreet corner mark that expands
+       on hover: present and readable when looked for, invisible when not. */
+    .map-surface .leaflet-control-attribution {
+        @apply rounded-tl bg-white/70 px-1.5 py-px text-[9px] leading-tight text-ink-400/70
+               backdrop-blur-[2px] transition-opacity;
+        max-width: 42%;
+    }
+
+    .map-surface .leaflet-control-attribution:hover {
+        @apply bg-white/95 text-ink-600;
+    }
+
+    .map-surface .leaflet-control-attribution a {
+        @apply text-ink-400/80 no-underline hover:text-ink-700;
+    }
+
+    /* ---- Basemap styling -------------------------------------------------
+
+       Raster tiles arrive in OSM's own colours, which are busy and clash with
+       everything around them. Filtering the tile pane — rather than paying for
+       a styled vector basemap — turns them into a quiet grey ground that the
+       zones and markers can sit on top of and actually be seen. */
+    .map-style-muted .leaflet-tile-pane {
+        filter: grayscale(0.92) brightness(1.08) contrast(0.86) saturate(0.7);
+    }
+
+    /* A faint wash of the brand hue over the ground, so the map belongs to the
+       interface instead of looking like an embedded third-party widget. */
+    .map-style-muted .leaflet-tile-pane::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgb(51 102 242 / 4%);
+        pointer-events: none;
+    }
+
+    .map-style-dark .leaflet-tile-pane {
+        filter: grayscale(1) invert(0.93) brightness(0.92) contrast(1.1) hue-rotate(185deg);
+    }
+
+    .map-style-dark {
+        @apply border-white/10 bg-ink-900;
+    }
+
+    .map-style-dark .leaflet-container {
+        @apply bg-ink-900;
+    }
+
+    .map-style-dark .leaflet-control-attribution {
+        @apply bg-ink-950/60 text-ink-500;
+    }
+
+    .map-style-dark .leaflet-control-zoom a {
+        @apply border-white/10 bg-ink-800 text-ink-200 hover:bg-ink-700 hover:text-white;
+    }
+
+    /* ---- Schematic -------------------------------------------------------
+
+       No tiles at all: a drawn diagram of the coverage areas on a brand
+       ground. Used where the question is "which areas do you serve?" rather
+       than "which street is the rider on?" — it reads more clearly at a
+       glance, loads instantly, and carries no third-party data or credit. */
+    .map-style-schematic {
+        @apply border-ink-200 bg-ink-50;
+        background-image:
+            radial-gradient(circle at 1px 1px, rgb(30 70 214 / 10%) 1px, transparent 0),
+            radial-gradient(70% 70% at 50% 45%, rgb(51 102 242 / 7%), transparent 70%);
+        background-size: 26px 26px, 100% 100%;
+    }
+
+    .map-style-schematic .leaflet-container {
+        background: transparent;
+    }
+
+    .map-surface .leaflet-popup-content-wrapper {
+        @apply rounded-md border border-ink-200 bg-white text-ink-900 shadow-lg;
+    }
+
+    .map-surface .leaflet-popup-content {
+        @apply m-0 px-3 py-2 text-xs;
+    }
+
+    .map-surface .leaflet-popup-tip {
+        @apply border-ink-200 bg-white;
+    }
+
+    /* Markers are composed from HTML rather than image sprites, so they inherit
+       the interface's type and colour and stay crisp at any density. */
+    .map-marker {
+        @apply flex items-center justify-center rounded-full text-white shadow-md
+               ring-2 ring-white;
+    }
+
+    .map-marker-pickup {
+        @apply bg-signal-600;
+    }
+
+    .map-marker-dropoff {
+        @apply bg-emerald-600;
+    }
+
+    .map-marker-rider {
+        @apply bg-ink-900;
+    }
+
+    .map-marker-late {
+        @apply bg-red-600;
+    }
+
+    /* A rider actively carrying a parcel gets a slow pulse. It is the one piece
+       of motion in the interface, and it marks the thing an operator is
+       watching — so it is reduced away for anyone who asked for less motion. */
+    .map-marker-pulse::after {
+        content: '';
+        @apply absolute inset-0 rounded-full;
+        box-shadow: 0 0 0 0 rgb(30 70 214 / 45%);
+        animation: map-pulse 2.4s ease-out infinite;
+    }
+
+    @keyframes map-pulse {
+        70% { box-shadow: 0 0 0 14px rgb(30 70 214 / 0%); }
+        100% { box-shadow: 0 0 0 0 rgb(30 70 214 / 0%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .map-marker-pulse::after { animation: none; }
+    }
+}
+
+/* Marketing surfaces.
+
+   The landing page is the only place the product has to *look* like something
+   before it can be used. Texture and depth here come from a dot field and
+   layered device frames showing the real interface — not from gradients or
+   glass, which age badly and say nothing about what the thing does. */
+@layer components {
+    .dot-field {
+        background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 7%) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+
+    .dot-field-light {
+        background-image: radial-gradient(circle at 1px 1px, rgb(13 17 23 / 6%) 1px, transparent 0);
+        background-size: 22px 22px;
+    }
+
+    /* A soft pool of brand light behind the hero device stack, so the frames
+       lift off the dark ground instead of dissolving into it. */
+    .hero-glow::before {
+        content: '';
+        position: absolute;
+        inset: -20% -10% auto -10%;
+        height: 70%;
+        background: radial-gradient(60% 60% at 50% 40%, rgb(51 102 242 / 22%), transparent 70%);
+        pointer-events: none;
+    }
+
+    .device-browser {
+        @apply overflow-hidden rounded-xl border border-white/12 bg-white shadow-2xl;
+    }
+
+    .device-phone {
+        @apply overflow-hidden rounded-[2rem] border-[6px] border-ink-800 bg-ink-950 shadow-2xl;
+    }
+
+    /* Mock interface fragments are rendered at real proportions and then
+       scaled down, so the type and spacing stay honest to the product rather
+       than being redrawn at a smaller size. */
+    .mock-scale {
+        transform-origin: top center;
+    }
+}
+
+@layer components {
+    /* A warm pool of light behind the hero, so the page opens with some
+       temperature instead of flat white. */
+    .warm-glow::before {
+        content: '';
+        position: absolute;
+        inset: -30% -20% auto 20%;
+        height: 80%;
+        background:
+            radial-gradient(45% 55% at 70% 30%, rgb(249 92 19 / 12%), transparent 70%),
+            radial-gradient(45% 55% at 35% 45%, rgb(51 102 242 / 10%), transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* The floating status cards that sit over the hero visual. Backdrop blur
+       is used once, here, where there is genuinely something behind it. */
+    .float-card {
+        @apply flex items-center gap-2.5 rounded-xl border border-white/60 bg-white/85
+               px-3 py-2.5 shadow-xl backdrop-blur-md;
+    }
+
+    /* The connector behind the process steps. Drawn as a single rule under the
+       row so the spacing between badges cannot drift out of alignment. */
+    .process-rail::before {
+        content: '';
+        position: absolute;
+        top: 1.75rem;
+        inset-inline: 12%;
+        height: 2px;
+        background: linear-gradient(
+            to right,
+            var(--color-ember-200),
+            var(--color-ember-400),
+            var(--color-ember-200)
+        );
+    }
+
+    @media (max-width: 1023px) {
+        .process-rail::before { display: none; }
+    }
+}
+
+@layer components {
+    /* Zone names printed onto the schematic map, where there is no street
+       label to compete with them. */
+    .map-surface .map-zone-label {
+        @apply rounded-none border-0 bg-transparent px-0 py-0 text-[11px] font-semibold
+               text-signal-800 shadow-none;
+    }
+
+    .map-surface .map-zone-label::before {
+        display: none;
+    }
+}
